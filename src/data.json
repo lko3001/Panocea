@@ -1,0 +1,78 @@
+{
+  "routes": [
+    {
+      "slug": "/todo",
+      "name": "To Do List",
+      "category": "productivity"
+    },
+    {
+      "slug": "/rss-feeds",
+      "name": "Rss Feeds",
+      "category": "news"
+    },
+    {
+      "slug": "/finance",
+      "name": "finance",
+      "category": "productivity"
+    },
+    {
+      "slug": "/",
+      "name": "Home",
+      "category": ""
+    }
+  ],
+  "todos": [
+    {
+      "id": "53f0bb3d-f12b-424f-a378-0eadc9397622",
+      "pinned": false,
+      "text": "react email"
+    },
+    {
+      "id": "89118696-6aa3-4114-b78d-7b9b59297e03",
+      "pinned": false,
+      "text": "graph (tremor)"
+    }
+  ],
+  "rssfeeds": [
+    {
+      "link": "https://www.theverge.com/rss/index.xml"
+    },
+    {
+      "link": "https://www.youtube.com/feeds/videos.xml?channel_id=UCqVEHtQoXHmUCfJ-9smpTSg"
+    }
+  ],
+  "finance": [
+    {
+      "id": "asalsdkfj",
+      "price": 0,
+      "title": "adsf",
+      "description": "adsf",
+      "category": "test1",
+      "type": "entry"
+    },
+    {
+      "id": "asalsdkfj",
+      "price": 0,
+      "title": "adsf",
+      "description": "adsf",
+      "category": "asd",
+      "type": "entry"
+    },
+    {
+      "id": "asalsdkfj",
+      "price": 0,
+      "title": "adsf",
+      "description": "adsf",
+      "category": "222",
+      "type": "entry"
+    },
+    {
+      "id": "asalsdkfj",
+      "price": 0,
+      "title": "adsf",
+      "description": "adsf",
+      "category": "asd",
+      "type": "entry"
+    }
+  ]
+}
