@@ -1,12 +1,11 @@
 "use client";
-import data from "@/data.json";
 import Parser from "rss-parser";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Crud } from "@/components/utils/apiFunctions";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { YoutubeFeed, YtEntry } from "@/types";
+import { Data, YoutubeFeed, YtEntry } from "@/types";
 import Image from "next/image";
 import {
   Card,
@@ -23,6 +22,7 @@ import {
   Cross1Icon,
   Cross2Icon,
 } from "@radix-ui/react-icons";
+import { useGlobal } from "@/components/context/GlobalContext";
 
 type Feed = {
   [key: string]: any;
@@ -55,12 +55,16 @@ export default function RssFeeds() {
 
   const router = useRouter();
 
+  const { fileData, UpdateFile } = useGlobal();
+  const data: Data = JSON.parse(fileData.contents);
+
   function createFeed() {
     if (inputRef.current && inputRef.current.value) {
       Crud({
         what: { link: inputRef.current.value },
         where: "rssfeeds",
         method: "create",
+        fileData: fileData,
       }).then(() => router.refresh());
       inputRef.current.value = "";
     }
@@ -168,10 +172,11 @@ export default function RssFeeds() {
             <div className="flex flex-row items-center" key={feed.link}>
               <Button
                 onClick={() => {
-                  Crud({
+                  UpdateFile({
                     id: feed.link,
                     where: "rssfeeds",
                     fieldName: "link",
+                    fileData: fileData,
                     method: "delete",
                   });
                   router.push("/rss-feeds");

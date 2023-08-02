@@ -1,27 +1,24 @@
 "use client";
 
-import { ReactNode, createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { CrudArguments, Data, FileProps } from "@/types";
+import { Crud } from "../utils/apiFunctions";
+import { Input } from "../ui/input";
 
 interface Props {
   openShortcut: () => void;
   setIsShortcutOpen: (isShortcutOpen: boolean) => void;
   isShortcutOpen: boolean;
   fileData: FileProps;
-}
-
-interface FileProps {
-  contents: string;
-  file: File;
-  fileHandle: FileSystemFileHandle;
+  UpdateFile: <T extends keyof Data>(props: CrudArguments<T>) => void;
 }
 
 const GlobalContext = createContext({} as Props);
@@ -33,6 +30,7 @@ export function useGlobal() {
 export function GlobalContextProvider({ children }: { children: ReactNode }) {
   const [isShortcutOpen, setIsShortcutOpen] = useState(false);
   const [fileData, setFileData] = useState<FileProps>({} as FileProps);
+  const idk = useRef(null);
 
   function openShortcut() {
     setIsShortcutOpen((p) => !p);
@@ -58,9 +56,20 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     setFileData({ fileHandle, file, contents });
   }
 
+  async function UpdateFile<T extends keyof Data>(props: CrudArguments<T>) {
+    const response = await Crud<T>(props);
+    setFileData((p) => ({ ...p, contents: response.contents }));
+  }
+
   return (
     <GlobalContext.Provider
-      value={{ openShortcut, setIsShortcutOpen, isShortcutOpen, fileData }}
+      value={{
+        openShortcut,
+        setIsShortcutOpen,
+        isShortcutOpen,
+        fileData,
+        UpdateFile,
+      }}
     >
       {fileData.contents && children}
       {!fileData.contents && (

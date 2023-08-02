@@ -5,7 +5,6 @@ import { Inter } from "next/font/google";
 import Shortcut from "@/components/layout/Shortcut";
 import { GlobalContextProvider } from "@/components/context/GlobalContext";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { useEffect, useState } from "react";
 
 const inter = Inter({
   subsets: ["latin"],

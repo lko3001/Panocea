@@ -18,7 +18,19 @@ export interface Data {
   routes: Route[];
   todos: Todo[];
   rssfeeds: RssFeed[];
+  finance: FinanceItem[];
 }
+
+export type CrudArguments<T extends keyof Data> = {
+  where: T;
+  fileData: FileProps;
+} & (
+  | {
+      method: "create";
+      what: Data[T][0];
+    }
+  | { method: "delete"; id: string; fieldName: keyof Data[T][0] }
+);
 
 export interface FinanceItem {
   id: string;
@@ -27,6 +39,12 @@ export interface FinanceItem {
   description: string;
   category: string;
   type: "entry" | "loss";
+}
+
+export interface FileProps {
+  contents: string;
+  file: File;
+  fileHandle: FileSystemFileHandle;
 }
 
 export interface YoutubeFeed {

@@ -2,12 +2,12 @@ import { Data } from "@/types";
 import { NextResponse } from "next/server";
 import { parseString } from "xml2js";
 
-interface Body<T extends keyof Data> {
+interface Body {
   feeds: { link: string }[];
 }
 
 export async function POST(req: Request) {
-  const body: Body<keyof Data> = await req.json();
+  const body: Body = await req.json();
 
   const corsProxy = "https://cors.eu.org/";
   const ytResultPromises = body.feeds.map(async (feed) => {

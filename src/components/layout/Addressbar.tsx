@@ -1,23 +1,26 @@
 "use client";
 "use client";
 import * as React from "react";
-import data from "@/data.json";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
-
-const routeCategories: string[] = Array.from(
-  new Set(data.routes.map((route) => route.category))
-).filter((el) => Boolean(el));
+import { useGlobal } from "../context/GlobalContext";
+import { Data } from "@/types";
 
 export default function Addressbar() {
+  const { fileData } = useGlobal();
+  const data: Data = JSON.parse(fileData.contents);
+
+  const routeCategories: string[] = Array.from(
+    new Set(data.routes.map((route) => route.category))
+  ).filter((el) => Boolean(el));
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -71,7 +74,7 @@ const ListItem = React.forwardRef<
         href={props.href!}
         ref={ref}
         className={cn(
-          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground capitalize",
           className
         )}
         {...props}

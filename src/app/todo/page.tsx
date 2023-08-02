@@ -1,17 +1,20 @@
 "use client";
 
-import { Crud } from "@/components/utils/apiFunctions";
-import data from "@/data.json";
-import { Todo } from "@/types";
+import { Data, Todo } from "@/types";
 import { v4 } from "uuid";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { useGlobal } from "@/components/context/GlobalContext";
 
 export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { fileData, UpdateFile } = useGlobal();
+  const data: Data = JSON.parse(fileData.contents);
+
   function compare(a: Todo, b: Todo) {
     if (a.pinned === b.pinned) {
       return 0;
@@ -29,7 +32,7 @@ export default function Todo() {
         pinned: false,
         text: inputRef.current.value,
       };
-      Crud({ what, where: "todos", method: "create" });
+      UpdateFile({ what, where: "todos", method: "create", fileData });
       inputRef.current.value = "";
     }
   }
@@ -59,11 +62,12 @@ export default function Todo() {
               variant={"destructive"}
               className="p-2 aspect-square"
               onClick={() =>
-                Crud({
+                UpdateFile({
                   method: "delete",
                   where: "todos",
                   fieldName: "id",
                   id: todo.id,
+                  fileData: fileData,
                 })
               }
             >

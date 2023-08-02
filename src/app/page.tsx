@@ -1,7 +1,5 @@
 "use client";
 import { useGlobal } from "@/components/context/GlobalContext";
-import Shortcut from "@/components/layout/Shortcut";
-import { Button } from "@/components/ui/button";
 import {
   CardHeader,
   Card,
@@ -9,29 +7,16 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import data from "@/data.json";
+import { Data } from "@/types";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
   const { openShortcut, fileData } = useGlobal();
-
-  async function writeFile(fileHandle: FileSystemFileHandle, contents: string) {
-    // Create a FileSystemWritableFileStream to write to.
-    const writable = await fileHandle.createWritable();
-    // Write the contents of the file to the stream.
-    await writable.write(contents);
-    // Close the file and write the contents to disk.
-    await writable.close();
-
-    console.log("DONE");
-  }
+  const data: Data = JSON.parse(fileData.contents);
 
   return (
     <div>
-      <Button onClick={() => writeFile(fileData.fileHandle, "LUL TEST")}>
-        WRITE FILE
-      </Button>
       <Input
         className="mb-6"
         placeholder="Search or Press CTRL + K..."

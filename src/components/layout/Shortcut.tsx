@@ -1,6 +1,5 @@
 "use client";
 
-import data from "@/data.json";
 import { CalendarIcon } from "@radix-ui/react-icons";
 
 import {
@@ -12,18 +11,21 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useGlobal } from "../context/GlobalContext";
-
-const routeCategories: string[] = Array.from(
-  new Set(data.routes.map((route) => route.category))
-).filter((el) => Boolean(el));
+import { Data } from "@/types";
 
 export default function Shortcut() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { isShortcutOpen, setIsShortcutOpen, openShortcut } = useGlobal();
+  const { isShortcutOpen, setIsShortcutOpen, openShortcut, fileData } =
+    useGlobal();
+  const data: Data = JSON.parse(fileData.contents);
+
+  const routeCategories: string[] = Array.from(
+    new Set(data.routes.map((route) => route.category))
+  ).filter((el) => Boolean(el));
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
