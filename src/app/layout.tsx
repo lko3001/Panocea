@@ -25,9 +25,9 @@ export default function RootLayout({
       <body className={`${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <GlobalContextProvider>
-            <div className="min-h-screen flex flex-col pb-12">
+            <div className="min-h-screen flex flex-col">
               <Navbar />
-              <main className="max-w-2xl mx-auto w-full">
+              <main className="w-full h-0 grow pb-12">
                 <Shortcut />
                 {children}
               </main>

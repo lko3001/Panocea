@@ -23,6 +23,7 @@ import {
   Cross2Icon,
 } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
+import { H2 } from "@/components/ui/typography";
 
 type Feed = {
   [key: string]: any;
@@ -56,7 +57,7 @@ export default function RssFeeds() {
   const router = useRouter();
 
   const { fileData, UpdateFile } = useGlobal();
-  const data: Data = JSON.parse(fileData.contents);
+  const { contents: data } = fileData;
 
   function createFeed() {
     if (inputRef.current && inputRef.current.value) {
@@ -147,7 +148,9 @@ export default function RssFeeds() {
   }, [feeds]);
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto max-w-3xl">
+      <H2 className="mb-6">Finance</H2>
+
       <div className="flex flex-row gap-1 mb-8">
         <Input
           type="text"

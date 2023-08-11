@@ -1,16 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import moment from "moment";
+import { useGlobal } from "../context/GlobalContext";
+import { useEffect, useState } from "react";
 export default function Clock() {
-  const [time, setTime] = useState<number>(Date.now());
   const router = useRouter();
+  const { pomodoro } = useGlobal();
+  const [now, setNow] = useState(moment().format());
 
   useEffect(() => {
     setInterval(() => {
-      const now = Date.now();
-      setTime(now);
-    }, 1000);
+      setNow(moment().format());
+    }, 100);
   }, []);
 
   return (
@@ -19,10 +21,16 @@ export default function Clock() {
       className="text-xl font-semibold"
       onClick={() => router.push("/")}
     >
-      {new Intl.DateTimeFormat("it-IT", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }).format(time)}
+      {moment(now).format("HH:mm")}
+      {pomodoro.isRunning && pomodoro.finishTime && (
+        <>
+          {" "}
+          •{" "}
+          {moment(moment(pomodoro.finishTime).diff(moment(now))).format(
+            "mm:ss"
+          )}
+        </>
+      )}
     </Button>
   );
 }

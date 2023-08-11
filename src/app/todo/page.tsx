@@ -8,12 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
+import { H2 } from "@/components/ui/typography";
 
 export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { fileData, UpdateFile } = useGlobal();
-  const data: Data = JSON.parse(fileData.contents);
+  const { contents: data } = fileData;
 
   function compare(a: Todo, b: Todo) {
     if (a.pinned === b.pinned) {
@@ -38,7 +39,8 @@ export default function Todo() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 max-w-3xl mx-auto">
+      <H2>To Do List</H2>
       <form
         onSubmit={(e) => {
           e.preventDefault();

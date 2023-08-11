@@ -14,38 +14,63 @@ export interface RssFeed {
   link: string;
 }
 
+export interface FinanceItem {
+  id: string;
+  price: number;
+  title: string;
+  description: string | undefined;
+  category: string;
+  type: "entry" | "loss";
+}
+
+type Category = { [key in keyof Omit<Data, "categories">]: string[] };
+
 export interface Data {
   routes: Route[];
   todos: Todo[];
   rssfeeds: RssFeed[];
   finance: FinanceItem[];
+  categories: Category;
 }
 
 export type CrudArguments<T extends keyof Data> = {
   where: T;
   fileData: FileProps;
 } & (
-  | {
+  | ({
       method: "create";
-      what: Data[T][0];
-    }
-  | { method: "delete"; id: string; fieldName: keyof Data[T][0] }
+      what: Data[T] extends (infer T)[] ? T : string;
+    } & (Data[T] extends (infer G)[] ? {} : { fieldName: keyof Data[T] }))
+  | ({ method: "delete"; id: string } & (Data[T] extends (infer T)[]
+      ? { fieldName: keyof T }
+      : { fieldName: keyof Data[T] }))
+  | ({
+      method: "deleteMany";
+      array: Data[T] extends (infer G)[] ? Data[T] : string[];
+    } & (Data[T] extends (infer T)[]
+      ? { fieldName: keyof T }
+      : { fieldName: keyof Data[T] }))
 );
 
-export interface FinanceItem {
-  id: string;
-  price: number;
-  title: string;
-  description: string;
-  category: string;
-  type: "entry" | "loss";
-}
-
 export interface FileProps {
-  contents: string;
+  contents: Data;
   file: File;
   fileHandle: FileSystemFileHandle;
 }
+
+export interface PomodoroTimers {
+  pomodoro: number;
+  break: number;
+}
+
+export interface Pomodoro {
+  timers: PomodoroTimers;
+  stage: keyof PomodoroTimers;
+  isRunning: boolean;
+  finishTime: string | undefined;
+}
+
+export type IncreaseOrDecrease = "increase" | "decrease";
 
 export interface YoutubeFeed {
   feed: {

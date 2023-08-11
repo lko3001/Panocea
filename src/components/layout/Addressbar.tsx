@@ -15,7 +15,7 @@ import { Data } from "@/types";
 
 export default function Addressbar() {
   const { fileData } = useGlobal();
-  const data: Data = JSON.parse(fileData.contents);
+  const { contents: data } = fileData;
 
   const routeCategories: string[] = Array.from(
     new Set(data.routes.map((route) => route.category))
