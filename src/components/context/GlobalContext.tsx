@@ -82,16 +82,13 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    console.log("UseEffect started");
     if (!pomodoro.isRunning) return;
     const ringToneDuration = ringtoneRef.current?.duration
       ? ringtoneRef?.current?.duration
       : 0;
-    console.log(`${pomodoro.stage} started`);
     setFinishTime(pomodoro.stage);
     timeoutWithRingtone = setTimeout(() => {
-      console.log("RINGTONE ENDED");
-      console.log(`${pomodoro.stage} ended`);
+      // RINGTONE END
       setPomodoro((p) => ({
         ...p,
         stage: pomodoro.stage === "break" ? "pomodoro" : "break",
@@ -100,7 +97,7 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
 
     timeoutSimple = setTimeout(
       () => {
-        console.log("RINGTONE STARTED");
+        // RINGTONE START
         ringtoneRef.current!.currentTime = 0;
         ringtoneRef.current?.play();
         setFinishTime(undefined);
@@ -146,7 +143,6 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
   }
 
   async function getFile() {
-    console.log("GETFILE");
     const [fileHandle]: [FileSystemFileHandle] =
       // @ts-ignore
       await window.showOpenFilePicker({
