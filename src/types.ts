@@ -72,6 +72,13 @@ export interface Pomodoro {
 
 export type IncreaseOrDecrease = "increase" | "decrease";
 
+export interface EmailTemplateProps {
+  title: string;
+  text: string;
+  fromEmail: string;
+  toEmail: string;
+}
+
 export interface YoutubeFeed {
   feed: {
     $: {
