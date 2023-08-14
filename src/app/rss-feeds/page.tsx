@@ -206,15 +206,16 @@ export default function RssFeeds() {
                 {item.link && item.title && (
                   <CardHeader>
                     <div className="mb-3">
-                      <Image
-                        priority={true}
+                      <img
                         className="h-24 aspect-video object-cover w-auto"
-                        width={
-                          item["media:group"][0]["media:thumbnail"][0].$.width
-                        }
-                        height={
-                          item["media:group"][0]["media:thumbnail"][0].$.height
-                        }
+                        style={{
+                          width:
+                            item["media:group"][0]["media:thumbnail"][0].$
+                              .width,
+                          height:
+                            item["media:group"][0]["media:thumbnail"][0].$
+                              .height,
+                        }}
                         src={item["media:group"][0]["media:thumbnail"][0].$.url}
                         alt=""
                       />
