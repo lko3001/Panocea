@@ -65,5 +65,8 @@
     "@types/xml2js": "^0.4.11",
     "file-loader": "^6.2.0",
     "prisma": "^5.1.1"
+  },
+  "prisma": {
+    "schema": "src/prisma"
   }
 }

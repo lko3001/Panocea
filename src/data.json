@@ -1,0 +1,37 @@
+{
+  "routes": [
+    {
+      "slug": "/todo",
+      "name": "To Do List",
+      "category": "productivity"
+    },
+    {
+      "slug": "/email",
+      "name": "Email",
+      "category": "tools"
+    },
+    {
+      "slug": "/rss-feeds",
+      "name": "Rss Feeds",
+      "category": "news"
+    },
+    {
+      "slug": "/finance",
+      "name": "finance",
+      "category": "productivity"
+    },
+    {
+      "slug": "/pomodoro",
+      "name": "pomodoro",
+      "category": "productivity"
+    },
+    {
+      "slug": "/",
+      "name": "Home",
+      "category": ""
+    }
+  ],
+  "categories": {
+    "routes": ["productivity", "news"]
+  }
+}
