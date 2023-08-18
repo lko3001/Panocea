@@ -1,11 +1,8 @@
-import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Shortcut from "@/components/layout/Shortcut";
 import { GlobalContextProvider } from "@/components/context/GlobalContext";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { SessionProvider } from "next-auth/react";
 import AuthProvider from "@/components/layout/AuthProvider";
 
 const inter = Inter({
