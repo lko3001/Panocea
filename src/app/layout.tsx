@@ -1,3 +1,4 @@
+"use client";
 import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
 import type { Metadata } from "next";
@@ -5,6 +6,7 @@ import { Inter } from "next/font/google";
 import Shortcut from "@/components/layout/Shortcut";
 import { GlobalContextProvider } from "@/components/context/GlobalContext";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,15 +29,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <GlobalContextProvider>
-            <div className="min-h-screen flex flex-col">
-              <Navbar />
-              <main className="w-full h-0 grow pb-12">
-                <Shortcut />
-                {children}
-              </main>
-            </div>
-          </GlobalContextProvider>
+          <SessionProvider>
+            <GlobalContextProvider>{children}</GlobalContextProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

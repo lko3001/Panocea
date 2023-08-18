@@ -1,9 +1,9 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
-import { BodyInt, TemplateElement } from "@/app/email/page";
+import { BodyInt, TemplateElement } from "@/app/(pages)/email/page";
 import { templates } from "@/variables";
 
-const resend = new Resend("re_S26dRNvw_Bdphxj2spvaRn86GKy27vg74");
+const resend = new Resend(process.env.RESEND_SECRET);
 export async function POST(request: Request) {
   try {
     const body: BodyInt = await request.json();
