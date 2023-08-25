@@ -10,27 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Categories {
-  id       String   @id @default(cuid())
-  todos    String[]
-  rssfeeds String[]
-  finance  String[]
-  userId   String   @unique
-  user     User     @relation(fields: [userId], references: [id])
-}
-
 model Todo {
   id     String  @id @default(cuid())
   pinned Boolean
   text   String
+  category    String?
   userId String
   user   User    @relation(fields: [userId], references: [id])
 }
 
 model RssFeed {
   id String @id @default(cuid())
-
   link   String
+  category    String?
   userId String
   user   User   @relation(fields: [userId], references: [id])
 }
@@ -39,8 +31,8 @@ model Finance {
   id          String @id @default(cuid())
   type        String
   title       String
-  description String
-  price       BigInt
+  description String?
+  price       Int
   category    String
   userId      String
   user        User   @relation(fields: [userId], references: [id])
@@ -81,10 +73,9 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  categories    Categories?
   rssfeeds      RssFeed[]
   todos         Todo[]
-  finance       Finance[]
+  finances       Finance[]
 }
 
 model VerificationToken {

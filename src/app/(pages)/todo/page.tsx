@@ -1,7 +1,6 @@
 "use client";
 
-import { Data, Todo } from "@/types";
-import { v4 } from "uuid";
+import { Todo } from "@/types";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,11 +11,9 @@ import { H2 } from "@/components/ui/typography";
 
 export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { userData, Crud } = useGlobal();
 
-  const { fileData, UpdateFile } = useGlobal();
-  const { contents: data } = fileData;
-
-  function compare(a: Todo, b: Todo) {
+  function comparePinned(a: Todo, b: Todo) {
     if (a.pinned === b.pinned) {
       return 0;
     } else if (a.pinned === true) {
@@ -26,14 +23,18 @@ export default function Todo() {
     }
   }
 
-  function createTodo() {
+  async function createTodo() {
     if (inputRef.current && inputRef.current.value) {
-      const what = {
-        id: v4(),
-        pinned: false,
-        text: inputRef.current.value,
-      };
-      UpdateFile({ what, where: "todos", method: "create", fileData });
+      Crud({
+        method: "create",
+        what: {
+          pinned: false,
+          text: inputRef.current.value,
+          userId: userData.user.id,
+        },
+        where: "todo",
+      });
+
       inputRef.current.value = "";
     }
   }
@@ -56,28 +57,30 @@ export default function Todo() {
         />
         <Button>Create</Button>
       </form>
-      {data.todos.sort(compare).map((todo: Todo) => (
-        <Card key={todo.id}>
-          <CardContent className="py-4 pr-4 flex flex-row items-center gap-6">
-            <p className="grow">{todo.text}</p>
-            <Button
-              variant={"destructive"}
-              className="p-2 aspect-square"
-              onClick={() =>
-                UpdateFile({
-                  method: "delete",
-                  where: "todos",
-                  fieldName: "id",
-                  id: todo.id,
-                  fileData: fileData,
-                })
-              }
-            >
-              <Cross2Icon />
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+      {userData.user &&
+        userData.user.todos &&
+        userData.user.todos.sort(comparePinned).map((todo) => {
+          return (
+            <Card key={todo.id}>
+              <CardContent className="py-4 pr-4 flex flex-row items-center gap-6">
+                <p className="grow">{todo.text}</p>
+                <Button
+                  variant={"destructive"}
+                  className="p-2 aspect-square"
+                  onClick={() => {
+                    Crud({
+                      method: "deleteMany",
+                      where: "todo",
+                      what: [todo.id!],
+                    });
+                  }}
+                >
+                  <Cross2Icon />
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
     </div>
   );
 }

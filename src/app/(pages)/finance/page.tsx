@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { GetCategories, cn } from "@/lib/utils";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,18 +26,13 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  CaretSortIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
-import { Data, FinanceItem } from "@/types";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { FinanceItem } from "@/types";
 import { useGlobal } from "@/components/context/GlobalContext";
 import { DialogContent, Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DonutChart } from "@tremor/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -46,7 +41,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -55,9 +49,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -68,28 +59,37 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { v4 } from "uuid";
-import { H1, H2, H3 } from "@/components/ui/typography";
+import { ArrowUpDown } from "lucide-react";
+import { H2, H3 } from "@/components/ui/typography";
+
+const newCategoryText = "new category";
 
 export default function Debt() {
-  const { fileData, UpdateFile } = useGlobal();
-  const { contents: data } = fileData;
+  const { userData, Crud } = useGlobal();
+
+  const [financeCategories, setFinanceCategories] = useState<
+    (string | undefined)[]
+  >([]);
+  const [losses, setLosses] = useState<FinanceItem[]>([]);
+  const [entries, setEntries] = useState<FinanceItem[]>([]);
+
+  useEffect(() => {
+    setFinanceCategories(GetCategories(userData.user.finances));
+    setLosses(userData.user.finances.filter((item) => item.type === "loss"));
+    setEntries(userData.user.finances.filter((item) => item.type === "entry"));
+  }, []);
 
   const [tabValue, setTabValue] = useState<"loss" | "entry" | "category">(
-    Boolean(data.categories.finance.length) ? "entry" : "category"
+    Boolean(financeCategories.length) ? "entry" : "category"
   );
 
-  const losses = data.finance.filter((item) => item.type === "loss");
-  const entries = data.finance.filter((item) => item.type === "entry");
-
-  function getHowMuchForCategory(array: FinanceItem[]) {
+  function getHowMuchForCategory(financeArray: FinanceItem[]) {
     const categories: string[] = Array.from(
-      new Set(array.map((route) => route.category))
+      new Set(financeArray.map((finance) => finance.category))
     ).filter((el) => Boolean(el));
 
     return categories.map((category) => {
-      const price = array
+      const price = financeArray
         .filter((item) => item.category === category)
         .reduce(
           (accumulator, currentValue) => accumulator + currentValue.price,
@@ -108,6 +108,7 @@ export default function Debt() {
     price: z.string().nonempty(),
     description: z.string().nonempty().optional(),
     category: z.string().nonempty(),
+    newCategory: z.string().nonempty().optional(),
   });
 
   const financeForm = useForm<z.infer<typeof FinanceFormSchema>>({
@@ -117,50 +118,28 @@ export default function Debt() {
       price: undefined,
       description: undefined,
       category: undefined,
+      newCategory: undefined,
     },
   });
 
   function handleNewFinanceSubmit(formData: z.infer<typeof FinanceFormSchema>) {
     setIsOpen((p) => !p);
-    UpdateFile({
+    Crud({
       method: "create",
       where: "finance",
       what: {
         type: tabValue as "entry" | "loss",
-        id: v4(),
         title: formData.title,
         description: formData.description,
         price: Number(formData.price),
-        category: formData.category,
+        category:
+          formData.category === newCategoryText
+            ? formData.newCategory!
+            : formData.category,
+        userId: userData.user.id,
       },
-      fileData,
     });
     financeForm.reset();
-  }
-
-  const CategoryFormSchema = z.object({
-    title: z.string().nonempty(),
-  });
-
-  const categoryForm = useForm<z.infer<typeof CategoryFormSchema>>({
-    resolver: zodResolver(CategoryFormSchema),
-    defaultValues: {
-      title: undefined,
-    },
-  });
-
-  function handleNewCategorySubmit(
-    formData: z.infer<typeof CategoryFormSchema>
-  ) {
-    setIsOpen((p) => !p);
-    UpdateFile({
-      where: "categories",
-      method: "create",
-      fieldName: "finance",
-      what: formData.title,
-      fileData,
-    });
-    categoryForm.reset();
   }
 
   const valueFormatter = (number: number) =>
@@ -244,14 +223,12 @@ export default function Debt() {
             }`}
           >
             <Tabs
-              defaultValue={
-                data.categories.finance.length ? "entry" : "category"
-              }
+              defaultValue={financeCategories.length ? "entry" : "category"}
             >
               <TabsList className="grid w-full grid-cols-3 my-4 mt-6">
                 <TabsTrigger
                   value="entry"
-                  disabled={Boolean(!data.categories.finance.length)}
+                  disabled={Boolean(!financeCategories.length)}
                   onFocus={(e: any) => setTabValue(e.target.innerHTML)}
                   className="capitalize data-[state=active]:dark:bg-green-600 data-[state=active]:bg-green-400"
                 >
@@ -259,7 +236,7 @@ export default function Debt() {
                 </TabsTrigger>
                 <TabsTrigger
                   value="loss"
-                  disabled={Boolean(!data.categories.finance.length)}
+                  disabled={Boolean(!financeCategories.length)}
                   onFocus={(e: any) => setTabValue(e.target.innerHTML)}
                   className="capitalize data-[state=active]:dark:bg-red-600 data-[state=active]:bg-red-400"
                 >
@@ -289,48 +266,11 @@ export default function Debt() {
                   form={financeForm}
                 />
               </TabsContent>
-              <TabsContent value="category">
-                <CategoryForm
-                  handleNewCategorySubmit={categoryForm.handleSubmit(
-                    handleNewCategorySubmit
-                  )}
-                  form={categoryForm}
-                />
-              </TabsContent>
             </Tabs>
           </DialogContent>
         </div>
       </Dialog>
     </>
-  );
-}
-
-function CategoryForm({
-  form,
-  handleNewCategorySubmit,
-}: {
-  form: any;
-  handleNewCategorySubmit: any;
-}) {
-  return (
-    <Form {...form}>
-      <form onSubmit={handleNewCategorySubmit} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="capitalize">title</FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Create</Button>
-      </form>
-    </Form>
   );
 }
 
@@ -341,10 +281,12 @@ function FinanceForm({
   form: any;
   handleNewFinanceSubmit: any;
 }) {
-  const { fileData } = useGlobal();
-  const { contents: data } = fileData;
+  const { userData } = useGlobal();
 
-  const categories = data.categories.finance;
+  const [isNewCategory, setIsNewCategory] = useState(false);
+
+  const financeCategories = GetCategories(userData.user.finances);
+  const financeCategoriesExpanded = [...financeCategories, newCategoryText];
 
   return (
     <Form {...form}>
@@ -411,12 +353,12 @@ function FinanceForm({
                       variant="outline"
                       role="combobox"
                       className={cn(
-                        "w-[200px] justify-between",
+                        "w-[200px] justify-between capitalize",
                         !field.value && "text-muted-foreground"
                       )}
                     >
                       {field.value
-                        ? categories.find(
+                        ? financeCategoriesExpanded.find(
                             (category) => category === field.value
                           )
                         : "Select category"}
@@ -432,12 +374,14 @@ function FinanceForm({
                     />
                     <CommandEmpty>No framework found.</CommandEmpty>
                     <CommandGroup>
-                      {categories.map((category) => (
+                      {financeCategoriesExpanded.map((category) => (
                         <CommandItem
                           value={category}
                           key={category}
+                          className="capitalize"
                           onSelect={() => {
                             form.setValue("category", category);
+                            setIsNewCategory(category === newCategoryText);
                           }}
                         >
                           {category}
@@ -459,6 +403,25 @@ function FinanceForm({
             </FormItem>
           )}
         />
+        {isNewCategory && (
+          <FormField
+            control={form.control}
+            name="newCategory"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="capitalize">New Category</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="New category name..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <Button type="submit">Submit</Button>
       </form>
     </Form>
@@ -471,8 +434,7 @@ function DataTableDemo<TData, TValue>() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const { fileData, UpdateFile } = useGlobal();
-  const { contents: contentsData } = fileData;
+  const { userData, Crud } = useGlobal();
 
   const customHeader = ({ column }: any, name: string) => {
     return (
@@ -552,7 +514,7 @@ function DataTableDemo<TData, TValue>() {
   ];
 
   const table = useReactTable({
-    data: contentsData.finance,
+    data: userData.user.finances,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -587,14 +549,12 @@ function DataTableDemo<TData, TValue>() {
               variant="destructive"
               className="ml-auto"
               onClick={() => {
-                UpdateFile({
+                Crud({
                   method: "deleteMany",
-                  fileData: fileData,
                   where: "finance",
-                  fieldName: "id",
-                  array: table
+                  what: table
                     .getSelectedRowModel()
-                    .rows.map((row) => row.original),
+                    .rows.map((row) => row.original.id!),
                 });
                 table.resetRowSelection();
               }}

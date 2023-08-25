@@ -13,11 +13,7 @@ export default function Navbar() {
         <Clock />
         <Addressbar />
       </div>
-      {/* <Button variant={"ghost"} size={"icon"}>
-        <PersonIcon className="w-4 h-4" />
-      </Button> */}
       <ProfileButton />
-      {/* <ModeToggle /> */}
     </nav>
   );
 }

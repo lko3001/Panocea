@@ -10,7 +10,6 @@ export async function POST(request: Request) {
     const EmailTemplate: TemplateElement = templates.find(
       (template) => template.name === body.chosenTemplate
     )!.element;
-    console.log(body, templates, EmailTemplate);
     const data = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
       to: [body.formData.toEmail],

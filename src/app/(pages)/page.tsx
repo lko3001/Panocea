@@ -1,4 +1,5 @@
 "use client";
+import data from "@/data.json";
 import { useGlobal } from "@/components/context/GlobalContext";
 import {
   CardHeader,
@@ -8,12 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  const router = useRouter();
-  const { openShortcut, fileData } = useGlobal();
-  const { contents: data } = fileData;
+  const { openShortcut, userData } = useGlobal();
 
   return (
     <div className="mx-auto max-w-3xl">

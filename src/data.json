@@ -3,32 +3,38 @@
     {
       "slug": "/todo",
       "name": "To Do List",
-      "category": "productivity"
+      "category": "productivity",
+      "requiresLogin": true
     },
     {
       "slug": "/email",
       "name": "Email",
-      "category": "tools"
+      "category": "tools",
+      "requiresLogin": false
     },
     {
       "slug": "/rss-feeds",
       "name": "Rss Feeds",
-      "category": "news"
+      "category": "news",
+      "requiresLogin": true
     },
     {
       "slug": "/finance",
       "name": "finance",
-      "category": "productivity"
+      "category": "productivity",
+      "requiresLogin": true
     },
     {
       "slug": "/pomodoro",
       "name": "pomodoro",
-      "category": "productivity"
+      "category": "productivity",
+      "requiresLogin": false
     },
     {
       "slug": "/",
       "name": "Home",
-      "category": ""
+      "category": "",
+      "requiresLogin": false
     }
   ],
   "categories": {

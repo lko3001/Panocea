@@ -1,5 +1,6 @@
 "use client";
-"use client";
+
+import data from "@/data.json";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -14,9 +15,6 @@ import { useGlobal } from "../context/GlobalContext";
 import { Data } from "@/types";
 
 export default function Addressbar() {
-  const { fileData } = useGlobal();
-  const { contents: data } = fileData;
-
   const routeCategories: string[] = Array.from(
     new Set(data.routes.map((route) => route.category))
   ).filter((el) => Boolean(el));

@@ -12,7 +12,10 @@ export default function Profile() {
         <pre className="rounded border bg-muted px-3 py-2 font-mono text-sm font-medium text-muted-foreground opacity-100">
           {JSON.stringify(session, undefined, 2)}
         </pre>
-        <Button variant={"destructive"} onClick={() => signOut()}>
+        <Button
+          variant={"destructive"}
+          onClick={() => signOut({ callbackUrl: "/" })}
+        >
           Log out
         </Button>
       </div>

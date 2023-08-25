@@ -1,6 +1,6 @@
 "use client";
 
-import { PersonIcon } from "@radix-ui/react-icons";
+import { PersonIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,9 +19,16 @@ export default function ProfileButton() {
   if (session.status === "unauthenticated")
     return <Button onClick={() => signIn("github")}>Login</Button>;
 
+  if (session.status === "loading")
+    return (
+      <span>
+        <UpdateIcon className="h-4 w-4 mx-[10px] animate-spin" />
+      </span>
+    );
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger id="test" asChild>
         <Button variant={"ghost"} size={"icon"}>
           <PersonIcon className="w-4 h-4" />
         </Button>

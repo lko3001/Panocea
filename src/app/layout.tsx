@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { GlobalContextProvider } from "@/components/context/GlobalContext";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import AuthProvider from "@/components/layout/AuthProvider";
+import { PomodoroContextProvider } from "@/components/context/PomodoroContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,7 +28,9 @@ export default function RootLayout({
       <body className={`${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
-            <GlobalContextProvider>{children}</GlobalContextProvider>
+            <GlobalContextProvider>
+              <PomodoroContextProvider>{children}</PomodoroContextProvider>
+            </GlobalContextProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

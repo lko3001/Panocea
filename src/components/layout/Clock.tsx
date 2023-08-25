@@ -2,11 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import moment from "moment";
-import { useGlobal } from "../context/GlobalContext";
 import { useEffect, useState } from "react";
+import { usePomodoro } from "@/components/context/PomodoroContext";
 export default function Clock() {
   const router = useRouter();
-  const { pomodoro } = useGlobal();
+  const { pomodoro } = usePomodoro();
   const [now, setNow] = useState(moment().format());
 
   useEffect(() => {

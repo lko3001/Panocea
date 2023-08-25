@@ -11,6 +11,9 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { signIn } from "next-auth/react";
 
 export default function SignIn() {
+  async function Login() {
+    await signIn("github");
+  }
   return (
     <Card className="max-w-sm w-full">
       <CardHeader>
@@ -18,7 +21,7 @@ export default function SignIn() {
         <CardDescription>Choose your preferred provider</CardDescription>
       </CardHeader>
       <CardContent>
-        <Button className="w-full" onClick={() => signIn("github")}>
+        <Button className="w-full" onClick={Login}>
           <GitHubLogoIcon className="mr-2 h-4 w-4" />
           Github
         </Button>

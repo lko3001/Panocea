@@ -1,21 +1,29 @@
-export interface Todo {
-  id: string;
+import { prisma } from "@/prisma/client";
+
+interface IdStuff {
+  id?: string;
+  userId?: string;
+}
+
+export interface Todo extends IdStuff {
   text: string;
   pinned: boolean;
+  category?: string;
 }
 
 export interface Route {
   slug: string;
   name: string;
   category: string;
+  requiresLogin: boolean;
 }
 
-export interface RssFeed {
+export interface RssFeed extends IdStuff {
   link: string;
+  category?: string;
 }
 
-export interface FinanceItem {
-  id: string;
+export interface FinanceItem extends IdStuff {
   price: number;
   title: string;
   description: string | undefined;
@@ -23,39 +31,34 @@ export interface FinanceItem {
   type: "entry" | "loss";
 }
 
-type Category = { [key in keyof Omit<Data, "categories">]: string[] };
+// type Category = { [key in keyof Omit<Data, "categories">]: string[] };
 
-export interface Data {
-  routes: Route[];
-  todos: Todo[];
-  rssfeeds: RssFeed[];
-  finance: FinanceItem[];
-  categories: Category;
+// type CrudBody<T> = {} & (
+//   | {
+//       method: "create";
+//       id: string | undefined;
+//       what: keyof Data[number];
+//       fieldName: keyof Data;
+//     }
+//   | { method: "delete"; id: string }
+// );
+
+export interface UserData {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: null | string;
+    image: string;
+    // categories: Category & IdStuff;
+  } & Data;
 }
 
-export type CrudArguments<T extends keyof Data> = {
-  where: T;
-  fileData: FileProps;
-} & (
-  | ({
-      method: "create";
-      what: Data[T] extends (infer T)[] ? T : string;
-    } & (Data[T] extends (infer G)[] ? {} : { fieldName: keyof Data[T] }))
-  | ({ method: "delete"; id: string } & (Data[T] extends (infer T)[]
-      ? { fieldName: keyof T }
-      : { fieldName: keyof Data[T] }))
-  | ({
-      method: "deleteMany";
-      array: Data[T] extends (infer G)[] ? Data[T] : string[];
-    } & (Data[T] extends (infer T)[]
-      ? { fieldName: keyof T }
-      : { fieldName: keyof Data[T] }))
-);
-
-export interface FileProps {
-  contents: Data;
-  file: File;
-  fileHandle: FileSystemFileHandle;
+export interface Data {
+  todos: Todo[];
+  rssFeeds: RssFeed[];
+  finances: FinanceItem[];
+  // categories: Category;
 }
 
 export interface PomodoroTimers {
@@ -78,6 +81,33 @@ export interface EmailTemplateProps {
   fromEmail: string;
   toEmail: string;
 }
+
+export type NoDollarSignOrSymbol<T> = T extends
+  | `$${infer _}`
+  | symbol
+  | "account"
+  | "session"
+  | "user"
+  | "verificationToken"
+  ? never
+  : T;
+
+export type Pluralize<T extends string> = `${T}s`;
+export type PrismaCleared = NoDollarSignOrSymbol<keyof typeof prisma>;
+
+export type CrudBody<T extends PrismaCleared> = {
+  where: T;
+} & (
+  | {
+      method: "create";
+      what: Data[Pluralize<T>][number] & { userId: string };
+    }
+  | {
+      method: "update";
+      what: Data[Pluralize<T>][number] & { userId: string; id: string };
+    }
+  | { method: "deleteMany"; what: string[] }
+);
 
 export interface YoutubeFeed {
   feed: {

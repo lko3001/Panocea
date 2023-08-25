@@ -2,7 +2,6 @@
 import Parser from "rss-parser";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Crud } from "@/components/utils/apiFunctions";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Data, YoutubeFeed, YtEntry } from "@/types";
@@ -53,51 +52,49 @@ export default function RssFeeds() {
   const [feeds, setFeeds] = useState<(Feed | YtFeedExtended)[]>([]);
   const [showRss, setShowRss] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { userData, Crud } = useGlobal();
 
   const router = useRouter();
 
-  const { fileData, UpdateFile } = useGlobal();
-  const { contents: data } = fileData;
-
   function createFeed() {
     if (inputRef.current && inputRef.current.value) {
-      Crud({
-        what: { link: inputRef.current.value },
-        where: "rssfeeds",
-        method: "create",
-        fileData: fileData,
-      }).then(() => router.refresh());
+      // Crud({
+      //   what: { link: inputRef.current.value },
+      //   where: "rssfeeds",
+      //   method: "create",
+      //   fileData: fileData,
+      // }).then(() => router.refresh());
       inputRef.current.value = "";
     }
   }
 
-  useEffect(() => {
-    const fetchFeeds = async () => {
-      const promises = data.rssfeeds
-        .filter((el) => !el.link.includes("youtube.com"))
-        .map(async (rssFeed) => {
-          const feed = await parser.parseURL(rssFeed.link);
-          return feed;
-        });
+  // useEffect(() => {
+  //   const fetchFeeds = async () => {
+  //     const promises = data.rssfeeds
+  //       .filter((el) => !el.link.includes("youtube.com"))
+  //       .map(async (rssFeed) => {
+  //         const feed = await parser.parseURL(rssFeed.link);
+  //         return feed;
+  //       });
 
-      const resolvedFeeds = await Promise.all(promises);
+  //     const resolvedFeeds = await Promise.all(promises);
 
-      const res = await fetch("/api/rss", {
-        method: "POST",
-        body: JSON.stringify({
-          feeds: data.rssfeeds.filter((el) => el.link.includes("youtube.com")),
-        }),
-      });
-      const youtubeFeeds = await res.json();
-      const youtubeFeedsArray: YtFeedExtended[] = youtubeFeeds.data.map(
-        (el: YoutubeFeed) => ({ youtube: true, ...el })
-      );
+  //     const res = await fetch("/api/rss", {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         feeds: data.rssfeeds.filter((el) => el.link.includes("youtube.com")),
+  //       }),
+  //     });
+  //     const youtubeFeeds = await res.json();
+  //     const youtubeFeedsArray: YtFeedExtended[] = youtubeFeeds.data.map(
+  //       (el: YoutubeFeed) => ({ youtube: true, ...el })
+  //     );
 
-      setFeeds((prev) => [...prev, ...resolvedFeeds, ...youtubeFeedsArray]);
-    };
+  //     setFeeds((prev) => [...prev, ...resolvedFeeds, ...youtubeFeedsArray]);
+  //   };
 
-    fetchFeeds();
-  }, []);
+  //   fetchFeeds();
+  // }, []);
 
   useEffect(() => {
     if (feeds.length && !items.length) {
@@ -171,16 +168,14 @@ export default function RssFeeds() {
       </div>
       {showRss && (
         <div className="flex flex-col gap-4 mb-8">
-          {data.rssfeeds.map((feed) => (
+          {userData.user.rssFeeds.map((feed) => (
             <div className="flex flex-row items-center" key={feed.link}>
               <Button
                 onClick={() => {
-                  UpdateFile({
-                    id: feed.link,
-                    where: "rssfeeds",
-                    fieldName: "link",
-                    fileData: fileData,
-                    method: "delete",
+                  Crud({
+                    method: "deleteMany",
+                    where: "rssFeed",
+                    what: [feed.id!],
                   });
                   router.push("/rss-feeds");
                 }}

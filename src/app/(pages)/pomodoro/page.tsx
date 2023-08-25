@@ -1,5 +1,5 @@
 "use client";
-import { useGlobal } from "@/components/context/GlobalContext";
+import { usePomodoro } from "@/components/context/PomodoroContext";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,7 +15,7 @@ import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
 export default function Pomodoro() {
-  const { startPomodoro, stopPomodoro, pomodoro, changeTimers } = useGlobal();
+  const { startPomodoro, stopPomodoro, pomodoro, changeTimers } = usePomodoro();
 
   return (
     <div className="max-w-5xl mx-auto h-full">
