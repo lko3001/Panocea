@@ -10,10 +10,11 @@
 
 <!-- - Remove unwanted `console.logs` -->
 
+<!-- - Add middleware for pages that need login -->
+
 - Fix `middleware.ts`
 - Fix `useStates` in `/finance`
 - Wait for just the pages that need to login
-<!-- - Add middleware for pages that need login -->
 - Remove `userData` button
 - Convert clock button into a link because it's not actionable by middle-clicking
 - Add "offline" functionality with PWA

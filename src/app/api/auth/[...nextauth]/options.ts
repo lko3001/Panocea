@@ -9,7 +9,6 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     GitHubProvider({
-      // id: "github-id",
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
     }),
@@ -22,5 +21,14 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/signin",
+  },
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      return true;
+    },
+    async redirect({ url, baseUrl }) {
+      console.log({ url, baseUrl });
+      return baseUrl;
+    },
   },
 };
