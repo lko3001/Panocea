@@ -10,4 +10,4 @@ export default withAuth({
   },
 });
 
-export const config = { matcher: "/todo" };
+export const config = { matcher: ["/todo", "/finance", "/rss-feeds"] };

@@ -9,10 +9,18 @@ import {
 } from "@/components/ui/card";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { signIn } from "next-auth/react";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 
 export default function SignIn() {
+  const router = useSearchParams();
   async function Login() {
-    await signIn("github");
+    console.log(router.getAll("callbackUrl")[0]);
+    await signIn("github", { callbackUrl: router.getAll("callbackUrl")[0] });
   }
   return (
     <Card className="max-w-sm w-full">
