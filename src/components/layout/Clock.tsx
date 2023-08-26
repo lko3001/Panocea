@@ -1,11 +1,9 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { usePomodoro } from "@/components/context/PomodoroContext";
+import Link from "next/link";
 export default function Clock() {
-  const router = useRouter();
   const { pomodoro } = usePomodoro();
   const [now, setNow] = useState(moment().format());
 
@@ -16,10 +14,9 @@ export default function Clock() {
   }, []);
 
   return (
-    <Button
-      variant={"ghost"}
-      className="text-xl font-semibold"
-      onClick={() => router.push("/")}
+    <Link
+      href={"/"}
+      className="text-xl font-semibold hover:bg-muted inline-block px-3 py-1 rounded-md"
     >
       {moment(now).format("HH:mm")}
       {pomodoro.isRunning && pomodoro.finishTime && (
@@ -31,6 +28,6 @@ export default function Clock() {
           )}
         </>
       )}
-    </Button>
+    </Link>
   );
 }

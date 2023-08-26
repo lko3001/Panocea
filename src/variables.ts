@@ -3,12 +3,12 @@ import Ancient from "@/emails/ancient";
 
 export const templates = [
   {
-    image: "https://unsplash.it/500/500",
+    image: "/modern-email-thumbnail.png",
     name: "modern",
     element: Modern,
   },
   {
-    image: "https://unsplash.it/500/500",
+    image: "/ancient-email-thumbnail.png",
     name: "Ancient",
     element: Ancient,
   },

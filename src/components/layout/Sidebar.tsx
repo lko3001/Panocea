@@ -13,7 +13,7 @@ const routeCategories: string[] = Array.from(
 export default function Sidebar() {
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild className="lg:hidden block mr-3">
         <Button variant="outline" size={"icon"}>
           <HamburgerMenuIcon className="h-4 w-4" />
         </Button>
@@ -28,7 +28,11 @@ export default function Sidebar() {
               {data.routes
                 .filter((route) => route.category === category)
                 .map((route) => (
-                  <Link href={route.slug} className="mb-1 block">
+                  <Link
+                    href={route.slug}
+                    className="mb-1 block"
+                    key={route.slug}
+                  >
                     <H4 className="capitalize">{route.name}</H4>
                   </Link>
                 ))}

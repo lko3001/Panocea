@@ -70,7 +70,6 @@ export default function RssFeeds() {
 
   useEffect(() => {
     const fetchFeeds = async () => {
-      console.log(userData);
       const promises = userData.user.rssFeeds
         .filter((el) => !el.link.includes("youtube.com"))
         .map(async (rssFeed) => {

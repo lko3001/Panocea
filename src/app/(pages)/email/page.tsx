@@ -72,7 +72,6 @@ export default function Email() {
       body: JSON.stringify(body),
     });
     const data = await res.json();
-    console.log(data);
   }
 
   function handleTemplateChoice(name: TemplateName) {

@@ -24,10 +24,10 @@ export default function Ancient({
     <Html>
       <Head>
         <Font
-          fontFamily="Crimson Text"
-          fallbackFontFamily="Verdana"
+          fontFamily="Libre Baskerville"
+          fallbackFontFamily="Times New Roman"
           webFont={{
-            url: "https://fonts.gstatic.com/s/crimsontext/v19/wlp2gwHKFkZgtmSR3NB0oRJfbwhT.woff2",
+            url: "https://fonts.gstatic.com/s/librebaskerville/v14/kmKnZrc3Hgbbcjq75U4uslyuy4kn0qNZaxM.woff2",
             format: "woff2",
           }}
           fontWeight={400}

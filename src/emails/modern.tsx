@@ -23,6 +23,9 @@ export default function Modern({ title, text, fromEmail }: EmailTemplateProps) {
           fontFamily="Inter"
           fallbackFontFamily="Verdana"
           webFont={{
+            // IT SEEMS LIKE THE ACTUAL FONT USED IS THE LAST ONE YOU PUT
+            // FOR EXAMPLE NOW I INSERTED "POPPINS" INSTEAD OF "INTER" BECAUSE "INTER" DIDN'T WORK
+            // NOW INTER WORKS AND POPPINS DOESN'T
             url: "https://fonts.gstatic.com/s/inter/v12/UcCo3FwrK3iLTcviYwY.woff2",
             format: "woff2",
           }}

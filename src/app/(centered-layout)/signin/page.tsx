@@ -19,7 +19,6 @@ import {
 export default function SignIn() {
   const router = useSearchParams();
   async function Login() {
-    console.log(router.getAll("callbackUrl")[0]);
     await signIn("github", { callbackUrl: router.getAll("callbackUrl")[0] });
   }
   return (
