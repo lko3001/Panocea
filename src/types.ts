@@ -31,18 +31,6 @@ export interface FinanceItem extends IdStuff {
   type: "entry" | "loss";
 }
 
-// type Category = { [key in keyof Omit<Data, "categories">]: string[] };
-
-// type CrudBody<T> = {} & (
-//   | {
-//       method: "create";
-//       id: string | undefined;
-//       what: keyof Data[number];
-//       fieldName: keyof Data;
-//     }
-//   | { method: "delete"; id: string }
-// );
-
 export interface UserData {
   user: {
     id: string;
@@ -50,7 +38,6 @@ export interface UserData {
     email: string;
     emailVerified: null | string;
     image: string;
-    // categories: Category & IdStuff;
   } & Data;
 }
 
@@ -58,7 +45,6 @@ export interface Data {
   todos: Todo[];
   rssFeeds: RssFeed[];
   finances: FinanceItem[];
-  // categories: Category;
 }
 
 export interface PomodoroTimers {

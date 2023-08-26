@@ -9,5 +9,4 @@
 
 # 💧 LOW EFFORT
 
-- Look images in `/email`
 - Check all commented out stuff `//`
