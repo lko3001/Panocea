@@ -38,7 +38,12 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify(session.data),
     })
       .then((res) => res.json())
-      .then((data) => setUserData(data))
+      .then((data) =>
+        setUserData({
+          ...data,
+          user: { ...data.user, rssFeeds: data.user.rssfeeds },
+        })
+      )
       .catch((err) => console.log("ERROR", err));
   }, [session]);
 

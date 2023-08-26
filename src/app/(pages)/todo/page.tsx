@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
 import { H2 } from "@/components/ui/typography";
+import { Skeleton } from "@/components/ui/skeleton";
+import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
 
 export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -57,12 +59,14 @@ export default function Todo() {
         />
         <Button>Create</Button>
       </form>
+      {!userData.user && (
+        <LoadingSkeleton className={"h-[68px]"} quantity={5} />
+      )}
       {userData.user &&
-        userData.user.todos &&
         userData.user.todos.sort(comparePinned).map((todo) => {
           return (
             <Card key={todo.id}>
-              <CardContent className="py-4 pr-4 flex flex-row items-center gap-6">
+              <CardContent className="py-4 pr-4 flex flex-row items-center gap-4">
                 <p className="grow">{todo.text}</p>
                 <Button
                   variant={"destructive"}

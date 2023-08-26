@@ -23,6 +23,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
 import { H2 } from "@/components/ui/typography";
+import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
 
 type Feed = {
   [key: string]: any;
@@ -58,43 +59,47 @@ export default function RssFeeds() {
 
   function createFeed() {
     if (inputRef.current && inputRef.current.value) {
-      // Crud({
-      //   what: { link: inputRef.current.value },
-      //   where: "rssfeeds",
-      //   method: "create",
-      //   fileData: fileData,
-      // }).then(() => router.refresh());
+      Crud({
+        where: "rssFeed",
+        method: "create",
+        what: { link: inputRef.current.value, userId: userData.user.id },
+      });
       inputRef.current.value = "";
     }
   }
 
-  // useEffect(() => {
-  //   const fetchFeeds = async () => {
-  //     const promises = data.rssfeeds
-  //       .filter((el) => !el.link.includes("youtube.com"))
-  //       .map(async (rssFeed) => {
-  //         const feed = await parser.parseURL(rssFeed.link);
-  //         return feed;
-  //       });
+  useEffect(() => {
+    const fetchFeeds = async () => {
+      console.log(userData);
+      const promises = userData.user.rssFeeds
+        .filter((el) => !el.link.includes("youtube.com"))
+        .map(async (rssFeed) => {
+          const feed = await parser.parseURL(rssFeed.link);
+          return feed;
+        });
 
-  //     const resolvedFeeds = await Promise.all(promises);
+      const resolvedFeeds = await Promise.all(promises);
 
-  //     const res = await fetch("/api/rss", {
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         feeds: data.rssfeeds.filter((el) => el.link.includes("youtube.com")),
-  //       }),
-  //     });
-  //     const youtubeFeeds = await res.json();
-  //     const youtubeFeedsArray: YtFeedExtended[] = youtubeFeeds.data.map(
-  //       (el: YoutubeFeed) => ({ youtube: true, ...el })
-  //     );
+      const res = await fetch("/api/rss", {
+        method: "POST",
+        body: JSON.stringify({
+          feeds: userData.user.rssFeeds.filter((el) =>
+            el.link.includes("youtube.com")
+          ),
+        }),
+      });
+      const youtubeFeeds = await res.json();
+      const youtubeFeedsArray: YtFeedExtended[] = youtubeFeeds.data.map(
+        (el: YoutubeFeed) => ({ youtube: true, ...el })
+      );
 
-  //     setFeeds((prev) => [...prev, ...resolvedFeeds, ...youtubeFeedsArray]);
-  //   };
+      setFeeds((prev) => [...prev, ...resolvedFeeds, ...youtubeFeedsArray]);
+    };
 
-  //   fetchFeeds();
-  // }, []);
+    if (userData.user) {
+      fetchFeeds();
+    }
+  }, [userData]);
 
   useEffect(() => {
     if (feeds.length && !items.length) {
@@ -145,8 +150,8 @@ export default function RssFeeds() {
   }, [feeds]);
 
   return (
-    <div className="mx-auto max-w-3xl">
-      <H2 className="mb-6">Finance</H2>
+    <div className="mx-auto max-w-3xl pb-16">
+      <H2 className="mb-6">Rss Feeds</H2>
 
       <div className="flex flex-row gap-1 mb-8">
         <Input
@@ -169,7 +174,7 @@ export default function RssFeeds() {
       {showRss && (
         <div className="flex flex-col gap-4 mb-8">
           {userData.user.rssFeeds.map((feed) => (
-            <div className="flex flex-row items-center" key={feed.link}>
+            <div className="flex flex-row items-center" key={feed.id}>
               <Button
                 onClick={() => {
                   Crud({
@@ -192,75 +197,83 @@ export default function RssFeeds() {
         </div>
       )}
       <div className="flex flex-col gap-4">
-        {items.map((element) => {
-          if (element.hasOwnProperty("youtube")) {
-            const item: YtEntry = element as any;
-            const videoId = item["yt:videoId"][0];
-            return (
-              <Card key={videoId}>
-                {item.link && item.title && (
-                  <CardHeader>
-                    <div className="mb-3">
-                      <img
-                        className="h-24 aspect-video object-cover w-auto"
-                        style={{
-                          width:
-                            item["media:group"][0]["media:thumbnail"][0].$
-                              .width,
-                          height:
-                            item["media:group"][0]["media:thumbnail"][0].$
-                              .height,
-                        }}
-                        src={item["media:group"][0]["media:thumbnail"][0].$.url}
-                        alt=""
-                      />
-                    </div>
-                    <CardTitle>
-                      <Link href={`https://www.youtube.com/watch?v=${videoId}`}>
-                        {item.title[0]}
-                      </Link>
-                    </CardTitle>
-                    <CardDescription className="flex flex-row items-center justify-between">
-                      <Link href={item.author[0].uri[0]}>
-                        {item.author[0].name[0]}
-                      </Link>
-                      {new Intl.DateTimeFormat("it-IT", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
-                      }).format(new Date(item.published[0]))}
-                    </CardDescription>
-                  </CardHeader>
-                )}
-              </Card>
-            );
-          } else {
-            const item: Item = element;
-            return (
-              <Card key={item.link}>
-                {item.link && item.title && (
-                  <CardHeader>
-                    <CardTitle>
-                      <Link href={item.link}>{item.title}</Link>
-                    </CardTitle>
-                    <CardDescription className="flex flex-row items-center justify-between">
-                      <span>{item.author}</span>
-                      {new Intl.DateTimeFormat("it-IT", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
-                      }).format(new Date(item.isoDate))}
-                    </CardDescription>
-                  </CardHeader>
-                )}
-              </Card>
-            );
-          }
-        })}
+        {!items.length && (
+          <LoadingSkeleton className={"h-[90px]"} quantity={5} />
+        )}
+        {Boolean(items.length) &&
+          items.map((element) => {
+            if (element.hasOwnProperty("youtube")) {
+              const item: YtEntry = element as any;
+              const videoId = item["yt:videoId"][0];
+              return (
+                <Card key={videoId}>
+                  {item.link && item.title && (
+                    <CardHeader>
+                      <div className="mb-3">
+                        <img
+                          className="h-24 aspect-video object-cover w-auto"
+                          style={{
+                            width:
+                              item["media:group"][0]["media:thumbnail"][0].$
+                                .width,
+                            height:
+                              item["media:group"][0]["media:thumbnail"][0].$
+                                .height,
+                          }}
+                          src={
+                            item["media:group"][0]["media:thumbnail"][0].$.url
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <CardTitle>
+                        <Link
+                          href={`https://www.youtube.com/watch?v=${videoId}`}
+                        >
+                          {item.title[0]}
+                        </Link>
+                      </CardTitle>
+                      <CardDescription className="flex flex-row items-center justify-between">
+                        <Link href={item.author[0].uri[0]}>
+                          {item.author[0].name[0]}
+                        </Link>
+                        {new Intl.DateTimeFormat("it-IT", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "2-digit",
+                        }).format(new Date(item.published[0]))}
+                      </CardDescription>
+                    </CardHeader>
+                  )}
+                </Card>
+              );
+            } else {
+              const item: Item = element;
+              return (
+                <Card key={item.link}>
+                  {item.link && item.title && (
+                    <CardHeader>
+                      <CardTitle>
+                        <Link href={item.link}>{item.title}</Link>
+                      </CardTitle>
+                      <CardDescription className="flex flex-row items-center justify-between">
+                        <span>{item.author}</span>
+                        {new Intl.DateTimeFormat("it-IT", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "2-digit",
+                        }).format(new Date(item.isoDate))}
+                      </CardDescription>
+                    </CardHeader>
+                  )}
+                </Card>
+              );
+            }
+          })}
       </div>
     </div>
   );

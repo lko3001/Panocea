@@ -74,10 +74,14 @@ export default function Debt() {
   const [entries, setEntries] = useState<FinanceItem[]>([]);
 
   useEffect(() => {
-    setFinanceCategories(GetCategories(userData.user.finances));
-    setLosses(userData.user.finances.filter((item) => item.type === "loss"));
-    setEntries(userData.user.finances.filter((item) => item.type === "entry"));
-  }, []);
+    if (userData.user) {
+      setFinanceCategories(GetCategories(userData.user.finances));
+      setLosses(userData.user.finances.filter((item) => item.type === "loss"));
+      setEntries(
+        userData.user.finances.filter((item) => item.type === "entry")
+      );
+    }
+  }, [userData.user]);
 
   const [tabValue, setTabValue] = useState<"loss" | "entry" | "category">(
     Boolean(financeCategories.length) ? "entry" : "category"
@@ -157,11 +161,13 @@ export default function Debt() {
         open={isOpen}
       >
         <div className="max-w-4xl mx-auto">
-          <H2 className="mb-6">Finance</H2>
+          <div className="flex flex-row items-center mb-6 gap-4">
+            <H2 className="grow">Finance</H2>
+            <DialogTrigger asChild>
+              <Button>Create new finance</Button>
+            </DialogTrigger>
+          </div>
 
-          <DialogTrigger asChild>
-            <Button>Create new finance</Button>
-          </DialogTrigger>
           <Tabs defaultValue="graphs">
             <TabsList className="grid w-full grid-cols-2 my-4 mt-6">
               <TabsTrigger value="graphs" className="capitalize">
