@@ -29,7 +29,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
             <GlobalContextProvider>
-              <PomodoroContextProvider>{children}</PomodoroContextProvider>
+              <PomodoroContextProvider>
+                <main className="px-4">{children}</main>
+              </PomodoroContextProvider>
             </GlobalContextProvider>
           </AuthProvider>
         </ThemeProvider>

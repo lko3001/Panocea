@@ -20,7 +20,7 @@ export default function Addressbar() {
   ).filter((el) => Boolean(el));
 
   return (
-    <NavigationMenu>
+    <NavigationMenu className="lg:block hidden">
       <NavigationMenuList>
         {routeCategories.map((category) => (
           <NavigationMenuItem key={category}>
