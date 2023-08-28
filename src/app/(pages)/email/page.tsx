@@ -19,6 +19,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { EmailTemplateProps } from "@/types";
 import { templates } from "@/variables";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 export interface BodyInt {
   formData: EmailTemplateProps & {
@@ -42,6 +44,9 @@ export default function Email() {
   const [chosenTemplate, setChosenTemplate] = useState<
     TemplateName | undefined
   >("Ancient");
+
+  const router = useRouter();
+  const { toast } = useToast();
 
   const EmailFormSchema = z.object({
     subject: z.string().nonempty(),
@@ -72,6 +77,16 @@ export default function Email() {
       body: JSON.stringify(body),
     });
     const data = await res.json();
+    if (data.hasOwnProperty("id")) {
+      router.push("/email");
+      toast({ description: "Email sent successfully", title: "Success" });
+    } else {
+      toast({
+        description: "Something went wrong",
+        title: "Error",
+        variant: "destructive",
+      });
+    }
   }
 
   function handleTemplateChoice(name: TemplateName) {

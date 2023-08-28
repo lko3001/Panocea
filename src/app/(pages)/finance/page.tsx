@@ -83,9 +83,7 @@ export default function Debt() {
     }
   }, [userData.user]);
 
-  const [tabValue, setTabValue] = useState<"loss" | "entry" | "category">(
-    Boolean(financeCategories.length) ? "entry" : "category"
-  );
+  const [tabValue, setTabValue] = useState<"loss" | "entry">("entry");
 
   function getHowMuchForCategory(financeArray: FinanceItem[]) {
     const categories: string[] = Array.from(
@@ -187,12 +185,14 @@ export default function Debt() {
                   index="category"
                   valueFormatter={valueFormatter}
                   colors={[
-                    "slate",
-                    "violet",
-                    "indigo",
-                    "rose",
-                    "cyan",
+                    "red",
+                    "orange",
                     "amber",
+                    "yellow",
+                    "lime",
+                    "green",
+                    "emerald",
+                    "teal",
                   ]}
                 />
               </div>
@@ -205,12 +205,15 @@ export default function Debt() {
                   index="category"
                   valueFormatter={valueFormatter}
                   colors={[
-                    "slate",
-                    "violet",
-                    "indigo",
-                    "rose",
                     "cyan",
-                    "amber",
+                    "sky",
+                    "blue",
+                    "indigo",
+                    "violet",
+                    "purple",
+                    "fuchsia",
+                    "pink",
+                    "rose",
                   ]}
                 />
               </div>
@@ -223,9 +226,7 @@ export default function Debt() {
             className={`outline ${
               tabValue === "loss"
                 ? "dark:outline-red-600 outline-red-400"
-                : tabValue === "entry"
-                ? "dark:outline-green-600 outline-green-400"
-                : "dark:outline-blue-600 outline-blue-400"
+                : "dark:outline-green-600 outline-green-400"
             }`}
           >
             <Tabs
@@ -247,13 +248,6 @@ export default function Debt() {
                   className="capitalize data-[state=active]:dark:bg-red-600 data-[state=active]:bg-red-400"
                 >
                   loss
-                </TabsTrigger>
-                <TabsTrigger
-                  value="category"
-                  onFocus={(e: any) => setTabValue(e.target.innerHTML)}
-                  className="capitalize data-[state=active]:dark:bg-blue-600 data-[state=active]:bg-blue-400"
-                >
-                  category
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="entry">
