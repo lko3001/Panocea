@@ -10,6 +10,7 @@ import { useGlobal } from "@/components/context/GlobalContext";
 import { H2 } from "@/components/ui/typography";
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
+import { v4 } from "uuid";
 
 export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -63,28 +64,36 @@ export default function Todo() {
         <LoadingSkeleton className={"h-[68px]"} quantity={5} />
       )}
       {userData.user &&
-        userData.user.todos.sort(comparePinned).map((todo) => {
-          return (
-            <Card key={todo.id}>
-              <CardContent className="py-4 pr-4 flex flex-row items-center gap-4">
-                <p className="grow">{todo.text}</p>
-                <Button
-                  variant={"destructive"}
-                  className="p-2 aspect-square"
-                  onClick={() => {
-                    Crud({
-                      method: "deleteMany",
-                      where: "todo",
-                      what: [todo.id!],
-                    });
-                  }}
-                >
-                  <Cross2Icon />
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
+        userData.user.todos
+          .reverse()
+          .sort(comparePinned)
+          .map((todo) => {
+            const isTemporary = todo.id!.startsWith("temporary");
+            return (
+              <Card
+                key={todo.id}
+                className={`${isTemporary ? "animate-pulse" : ""}`}
+              >
+                <CardContent className="py-4 pr-4 flex flex-row items-center gap-4">
+                  <p className="grow">{todo.text}</p>
+                  <Button
+                    variant={"ghost"}
+                    className="p-2 aspect-square"
+                    disabled={isTemporary}
+                    onClick={() => {
+                      Crud({
+                        method: "deleteMany",
+                        where: "todo",
+                        what: [todo.id!],
+                      });
+                    }}
+                  >
+                    <Cross2Icon />
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
     </div>
   );
 }

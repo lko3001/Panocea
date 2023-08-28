@@ -1,9 +1,9 @@
 import { prisma } from "@/prisma/client";
-import { CrudBody, Data, PrismaCleared } from "@/types";
+import { CrudBody, Data, PrismaBody, PrismaCleared } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const body: CrudBody<PrismaCleared> = await req.json();
+  const body: PrismaBody<PrismaCleared> = await req.json();
 
   switch (body.method) {
     case "update":

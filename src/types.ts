@@ -81,7 +81,7 @@ export type NoDollarSignOrSymbol<T> = T extends
 export type Pluralize<T extends string> = `${T}s`;
 export type PrismaCleared = NoDollarSignOrSymbol<keyof typeof prisma>;
 
-export type CrudBody<T extends PrismaCleared> = {
+export type PrismaBody<T extends PrismaCleared> = {
   where: T;
 } & (
   | {
@@ -91,6 +91,19 @@ export type CrudBody<T extends PrismaCleared> = {
   | {
       method: "update";
       what: Data[Pluralize<T>][number] & { userId: string; id: string };
+    }
+  | { method: "deleteMany"; what: string[] }
+);
+export type CrudBody<T extends Pluralize<PrismaCleared>> = {
+  where: T;
+} & (
+  | {
+      method: "create";
+      what: Data[T][number] & { userId: string };
+    }
+  | {
+      method: "update";
+      what: Data[T][number] & { userId: string; id: string };
     }
   | { method: "deleteMany"; what: string[] }
 );

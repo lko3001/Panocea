@@ -9,4 +9,4 @@
 
 # 💧 LOW EFFORT
 
-- Check all commented out stuff `//`
+- Remove `Category` from `/finance`
