@@ -13,6 +13,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Panocea",
   description: "Panocea",
+  manifest: "manifest.json",
   icons: { apple: "/icon.png" },
   themeColor: "#000000",
 };
