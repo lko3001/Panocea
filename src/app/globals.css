@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;

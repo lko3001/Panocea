@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { H4 } from "../ui/typography";
 import data from "@/data.json";
@@ -33,7 +38,9 @@ export default function Sidebar() {
                     className="mb-1 block"
                     key={route.slug}
                   >
-                    <H4 className="capitalize">{route.name}</H4>
+                    <SheetClose>
+                      <H4 className="capitalize">{route.name}</H4>
+                    </SheetClose>
                   </Link>
                 ))}
               <Separator className="my-4" />
