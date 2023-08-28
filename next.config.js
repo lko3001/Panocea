@@ -13,5 +13,4 @@ const nextConfig = withPWA({
   outputFileTracing: false,
 });
 
-module.exports =
-  process.env.NODE_ENV === "development" ? nextConfig : nextConfig;
+module.exports = process.env.NODE_ENV === nextConfig;
