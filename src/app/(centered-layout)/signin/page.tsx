@@ -19,7 +19,8 @@ import {
 export default function SignIn() {
   const router = useSearchParams();
   async function Login() {
-    await signIn("github");
+    // await signIn("github", { callbackUrl: router.getAll("callbackUrl")[0] });
+    await signIn();
   }
   return (
     <Card className="max-w-sm w-full">
