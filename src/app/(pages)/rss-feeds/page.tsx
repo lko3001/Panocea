@@ -20,10 +20,21 @@ import {
   ChevronDownIcon,
   Cross1Icon,
   Cross2Icon,
+  InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
-import { H2 } from "@/components/ui/typography";
+import { H2, Monospace } from "@/components/ui/typography";
 import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 
 type Feed = {
   [key: string]: any;
@@ -150,12 +161,15 @@ export default function RssFeeds() {
 
   return (
     <div className="mx-auto max-w-3xl pb-16">
-      <H2 className="mb-6">Rss Feeds</H2>
+      <div className="mb-6 flex flex-row items-center">
+        <H2 className="grow">Rss Feeds</H2>
+        <InfoDialog />
+      </div>
 
       <div className="flex flex-row gap-1 mb-8">
         <Input
           type="text"
-          placeholder="What do I have to do?"
+          placeholder="Rss link..."
           autoFocus
           className="mr-1"
           ref={inputRef}
@@ -183,14 +197,12 @@ export default function RssFeeds() {
                   });
                   router.push("/rss-feeds");
                 }}
-                variant={"destructive"}
-                className="aspect-square p-0 h-5 mr-2"
+                variant={"ghost"}
+                className="aspect-square p-1 h-7 mr-2"
               >
-                <Cross2Icon className="h-3 w-3" />
+                <Cross2Icon className="h-4 w-4" />
               </Button>
-              <p className="items-center rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100">
-                {feed.link}
-              </p>
+              <Monospace>{feed.link}</Monospace>
             </div>
           ))}
         </div>
@@ -275,5 +287,40 @@ export default function RssFeeds() {
           })}
       </div>
     </div>
+  );
+}
+
+function InfoDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size={"icon"} variant={"ghost"}>
+          <InfoCircledIcon className="h-4 w-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>How to get a Rss Link</DialogTitle>
+        </DialogHeader>
+        <p>
+          Not every website uses RSS, but some do. To get a RSS link, go to a
+          website's <strong>homepage</strong> and press{" "}
+          <Monospace>CTRL+U</Monospace>, then search for "rss". Some browsers
+          like the <a href="https://vivaldi.com">Vivaldi Browser</a>{" "}
+          automatically find for you the RSS link if it's available
+        </p>
+        <p>
+          For Youtube it's the same thing. Go to the youtube channel's page and
+          press <Monospace>CTRL+U</Monospace> and look again for "rss".
+        </p>
+        <Separator />
+        <DialogFooter>
+          <p>
+            Remember to go to the youtube channel's page or the website's
+            homepage
+          </p>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

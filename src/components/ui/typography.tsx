@@ -74,4 +74,23 @@ function H4({
   );
 }
 
-export { H1, H2, H3, H4 };
+function Monospace({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <span
+      className={cn(
+        "font-mono px-2 py-[3px] text-sm rounded-md bg-muted",
+        className
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+
+export { H1, H2, H3, H4, Monospace };
