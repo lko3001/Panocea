@@ -1,6 +1,6 @@
 "use client";
 
-import data from "@/data.json";
+import routesJson from "@/json/routes.json";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import {
   CommandDialog,
@@ -21,7 +21,7 @@ export default function Shortcut() {
   const { isShortcutOpen, setIsShortcutOpen, openShortcut } = useGlobal();
 
   const routeCategories: string[] = Array.from(
-    new Set(data.routes.map((route) => route.category))
+    new Set(routesJson.routes.map((route) => route.category))
   ).filter((el) => Boolean(el));
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function Shortcut() {
               className="capitalize"
               heading={category}
             >
-              {data.routes
+              {routesJson.routes
                 .filter((route) => route.category === category)
                 .map((route) => (
                   <CommandItem

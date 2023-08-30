@@ -1,5 +1,5 @@
 "use client";
-import data from "@/data.json";
+import routesJson from "@/json/routes.json";
 import { useGlobal } from "@/components/context/GlobalContext";
 import {
   CardHeader,
@@ -21,7 +21,7 @@ export default function Home() {
         placeholder="Search or Press CTRL + K..."
         onClick={openShortcut}
       />
-      {data.routes.map((route) => (
+      {routesJson.routes.map((route) => (
         <Link href={route.slug} key={route.slug}>
           <Card
             key={route.slug}

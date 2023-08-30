@@ -1,6 +1,6 @@
 "use client";
 
-import data from "@/data.json";
+import routesJson from "@/json/routes.json";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -16,7 +16,7 @@ import { Data } from "@/types";
 
 export default function Addressbar() {
   const routeCategories: string[] = Array.from(
-    new Set(data.routes.map((route) => route.category))
+    new Set(routesJson.routes.map((route) => route.category))
   ).filter((el) => Boolean(el));
 
   return (
@@ -35,13 +35,14 @@ export default function Addressbar() {
             <NavigationMenuContent id={category} aria-controls={category}>
               <ul
                 className={`grid w-[400px] gap-3 p-4 md:w-[500px] ${
-                  data.routes.filter((route) => route.category === category)
-                    .length !== 1
+                  routesJson.routes.filter(
+                    (route) => route.category === category
+                  ).length !== 1
                     ? "md:grid-cols-2"
                     : ""
                 } lg:w-[600px]`}
               >
-                {data.routes
+                {routesJson.routes
                   .filter((route) => route.category === category)
                   .map((route) => (
                     <ListItem

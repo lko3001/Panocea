@@ -7,6 +7,12 @@
       "requiresLogin": true
     },
     {
+      "slug": "/word-generator",
+      "name": "Word Generator",
+      "category": "tools",
+      "requiresLogin": true
+    },
+    {
       "slug": "/email",
       "name": "Email",
       "category": "tools",
@@ -20,13 +26,13 @@
     },
     {
       "slug": "/finance",
-      "name": "finance",
+      "name": "Finance",
       "category": "productivity",
       "requiresLogin": true
     },
     {
       "slug": "/pomodoro",
-      "name": "pomodoro",
+      "name": "Pomodoro",
       "category": "productivity",
       "requiresLogin": false
     },

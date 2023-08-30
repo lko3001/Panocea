@@ -10,3 +10,21 @@ export function cn(...inputs: ClassValue[]) {
 export function GetCategories(array: Data[keyof Data]) {
   return Array.from(new Set(array.map((element) => element.category)));
 }
+
+export function randomChoice(array: any[]) {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
+
+export function shuffleArray(array: string[]) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+export function splitByVowels(word: string) {
+  const vowels = ["a", "e", "i", "o", "u"];
+  let splittedWord = word.toLocaleLowerCase();
+  vowels.map(
+    (vowel) => (splittedWord = splittedWord.replaceAll(vowel, `${vowel} `))
+  );
+  return splittedWord.split(" ");
+}

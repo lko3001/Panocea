@@ -7,12 +7,12 @@ import {
 } from "@/components/ui/sheet";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { H4 } from "../ui/typography";
-import data from "@/data.json";
+import routesJson from "@/json/routes.json";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
 
 const routeCategories: string[] = Array.from(
-  new Set(data.routes.map((route) => route.category))
+  new Set(routesJson.routes.map((route) => route.category))
 ).filter((el) => Boolean(el));
 
 export default function Sidebar() {
@@ -30,7 +30,7 @@ export default function Sidebar() {
               <H4 className="uppercase text-xs text-muted-foreground mb-2">
                 {category}
               </H4>
-              {data.routes
+              {routesJson.routes
                 .filter((route) => route.category === category)
                 .map((route) => (
                   <Link
