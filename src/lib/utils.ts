@@ -28,3 +28,9 @@ export function splitByVowels(word: string) {
   );
   return splittedWord.split(" ");
 }
+
+export function getRandomIntInRange(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

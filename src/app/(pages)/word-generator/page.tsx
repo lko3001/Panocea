@@ -2,7 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { H2, H3 } from "@/components/ui/typography";
 import words from "@/json/words.json";
-import { randomChoice, shuffleArray, splitByVowels } from "@/lib/utils";
+import {
+  getRandomIntInRange,
+  randomChoice,
+  shuffleArray,
+  splitByVowels,
+} from "@/lib/utils";
 import { useState } from "react";
 import {
   Accordion,
@@ -74,8 +79,11 @@ export default function WordGenerator() {
       .map(() => randomChoice(words["nouns"]));
     const syllables = splitByVowels(chosenWords.join(""));
     const shuffledSyllables = shuffleArray(syllables);
+    const fullWord = shuffledSyllables.join("");
 
-    setGeneratedWord(shuffledSyllables.join("").slice(0, number));
+    const sliceStart = getRandomIntInRange(0, fullWord.length - number);
+
+    setGeneratedWord(fullWord.slice(sliceStart, sliceStart + number));
   }
 
   return (
