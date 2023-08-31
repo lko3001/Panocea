@@ -226,7 +226,7 @@ function GeneratedWord({ word }: { word: string }) {
               Automatic availability checking will be implemented soon (yeah,
               sure). Now you can use these links:
             </AlertTitle>
-            <AlertDescription className="flex flex-row items-center gap-4 mt-3">
+            <AlertDescription className="flex flex-row items-center gap-4 mt-3 flex-wrap">
               {linksToCheckAvailability.map((link) => (
                 <Link
                   href={link.link.replace("username", word)}
