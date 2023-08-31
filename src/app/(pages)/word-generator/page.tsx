@@ -26,9 +26,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CopyIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type WordsType = keyof typeof words;
-// const wordsType = Object.keys(words) as WordsType[];
 
 const usernameFormSchema = z.object({
   wordsType: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -74,15 +75,7 @@ export default function WordGenerator() {
     const syllables = splitByVowels(chosenWords.join(""));
     const shuffledSyllables = shuffleArray(syllables);
 
-    const randomWordArray: string[] = [];
-    let index = 0;
-
-    while (randomWordArray.join("").length <= number) {
-      randomWordArray.push(shuffledSyllables[index]);
-      index++;
-    }
-
-    setGeneratedWord(randomWordArray.join("").slice(0, number));
+    setGeneratedWord(shuffledSyllables.join("").slice(0, number));
   }
 
   return (
@@ -196,24 +189,56 @@ export default function WordGenerator() {
   );
 }
 
+const linksToCheckAvailability = [
+  { name: "domain", link: "https://username.com/" },
+  { name: "google", link: "https://accounts.google.com/" },
+  { name: "reddit", link: "https://reddit.com/user/username" },
+  { name: "instagram", link: "https://instagram.com/username" },
+  { name: "tikTok", link: "https://tiktok.com/@username" },
+  { name: "twitter", link: "https://twitter.com/username" },
+  { name: "pinterest", link: "https://pinterest.com/username" },
+  { name: "twitch", link: "https://twitch.tv/username" },
+  { name: "youtube", link: "https://youtube.com/@username" },
+  { name: "vercel", link: "https://username.vercel.app" },
+];
+
 function GeneratedWord({ word }: { word: string }) {
   const { toast } = useToast();
 
   return (
     <>
       {word && (
-        <div className="bg-muted/50 flex flex-row items-center p-3 mt-4 rounded-md gap-4">
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            onClick={() => {
-              toast({ description: "Copied to clipboard!" });
-            }}
-          >
-            <CopyIcon className="h-4 w-4" />
-          </Button>
-          <H3 className="font-mono">{word}</H3>
-        </div>
+        <>
+          <div className="bg-muted/50 flex flex-row items-center p-3 my-4 rounded-md gap-4">
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              onClick={() => {
+                toast({ description: "Copied to clipboard!" });
+              }}
+            >
+              <CopyIcon className="h-4 w-4" />
+            </Button>
+            <H3 className="font-mono">{word}</H3>
+          </div>
+          <Alert>
+            <AlertTitle>
+              Automatic availability checking will be implemented soon (yeah,
+              sure). Now you can use these links:
+            </AlertTitle>
+            <AlertDescription className="flex flex-row items-center gap-4 mt-3">
+              {linksToCheckAvailability.map((link) => (
+                <Link
+                  href={link.link.replace("username", word)}
+                  target="_blank"
+                  className="capitalize bg-muted px-3 py-1 rounded-md"
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </AlertDescription>
+          </Alert>
+        </>
       )}
     </>
   );

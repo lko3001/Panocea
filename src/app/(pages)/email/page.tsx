@@ -77,6 +77,7 @@ export default function Email() {
       body: JSON.stringify(body),
     });
     const data = await res.json();
+    console.log(data);
     if (data.hasOwnProperty("id")) {
       router.push("/email");
       toast({ description: "Email sent successfully", title: "Success" });
