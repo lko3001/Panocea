@@ -222,6 +222,7 @@ function GeneratedWord({ word }: { word: string }) {
               size={"icon"}
               variant={"ghost"}
               onClick={() => {
+                navigator.clipboard.writeText(word);
                 toast({ description: "Copied to clipboard!" });
               }}
             >
