@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { H2, H3 } from "@/components/ui/typography";
 import words from "@/json/words.json";
+import latinWords from "@/json/latin-words.json";
 import {
   getRandomIntInRange,
   randomChoice,
@@ -33,6 +34,8 @@ import { CopyIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 type WordsType = keyof typeof words;
 
@@ -43,6 +46,7 @@ const usernameFormSchema = z.object({
 });
 const randomWordFormSchema = z.object({
   wordLength: z.coerce.number().min(3).max(20),
+  latinMode: z.boolean(),
 });
 
 export default function WordGenerator() {
@@ -59,6 +63,7 @@ export default function WordGenerator() {
     resolver: zodResolver(randomWordFormSchema),
     defaultValues: {
       wordLength: 8,
+      latinMode: false,
     },
   });
 
@@ -66,17 +71,17 @@ export default function WordGenerator() {
     generateRandomUsername(values.wordsType as WordsType[]);
   }
   function randomWordSubmit(values: z.infer<typeof randomWordFormSchema>) {
-    generateRandomWord(values.wordLength);
+    generateRandomWord(values.wordLength, values.latinMode);
   }
 
   function generateRandomUsername(which: WordsType[]) {
     const chosenWords = which.map((property) => randomChoice(words[property]));
     setGeneratedUsername(chosenWords.join("-").toLocaleLowerCase());
   }
-  function generateRandomWord(number: number) {
+  function generateRandomWord(number: number, latinMode: boolean) {
     const chosenWords = new Array(number)
       .fill(0)
-      .map(() => randomChoice(words["nouns"]));
+      .map(() => randomChoice(latinMode ? latinWords.words : words["nouns"]));
     const syllables = splitByVowels(chosenWords.join(""));
     const shuffledSyllables = shuffleArray(syllables);
     const fullWord = shuffledSyllables.join("");
@@ -183,6 +188,24 @@ export default function WordGenerator() {
                       </FormControl>
 
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={randomWordForm.control}
+                  name="latinMode"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-2 flex-row">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          id="latin-mode"
+                        />
+                      </FormControl>
+                      <Label htmlFor="latin-mode" className="!m-0">
+                        Latin Mode
+                      </Label>
                     </FormItem>
                   )}
                 />
