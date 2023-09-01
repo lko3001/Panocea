@@ -47,6 +47,7 @@ const usernameFormSchema = z.object({
 const randomWordFormSchema = z.object({
   wordLength: z.coerce.number().min(3).max(20),
   latinMode: z.boolean(),
+  whatToInclude: z.string().max(3).optional(),
 });
 
 export default function WordGenerator() {
@@ -64,6 +65,7 @@ export default function WordGenerator() {
     defaultValues: {
       wordLength: 8,
       latinMode: false,
+      whatToInclude: "",
     },
   });
 
@@ -71,14 +73,22 @@ export default function WordGenerator() {
     generateRandomUsername(values.wordsType as WordsType[]);
   }
   function randomWordSubmit(values: z.infer<typeof randomWordFormSchema>) {
-    generateRandomWord(values.wordLength, values.latinMode);
+    generateRandomWord(
+      values.wordLength,
+      values.latinMode,
+      values.whatToInclude
+    );
   }
 
   function generateRandomUsername(which: WordsType[]) {
     const chosenWords = which.map((property) => randomChoice(words[property]));
     setGeneratedUsername(chosenWords.join("-").toLocaleLowerCase());
   }
-  function generateRandomWord(number: number, latinMode: boolean) {
+  function generateRandomWord(
+    number: number,
+    latinMode: boolean,
+    whatToInclude?: string
+  ) {
     const chosenWords = new Array(number)
       .fill(0)
       .map(() => randomChoice(latinMode ? latinWords.words : words["nouns"]));
@@ -87,8 +97,15 @@ export default function WordGenerator() {
     const fullWord = shuffledSyllables.join("");
 
     const sliceStart = getRandomIntInRange(0, fullWord.length - number);
+    const finalWord = fullWord.slice(sliceStart, sliceStart + number);
 
-    setGeneratedWord(fullWord.slice(sliceStart, sliceStart + number));
+    if (whatToInclude) {
+      if (finalWord.includes(whatToInclude)) {
+        setGeneratedWord(finalWord);
+      } else {
+        generateRandomWord(number, latinMode, whatToInclude);
+      }
+    } else setGeneratedWord(finalWord);
   }
 
   return (
@@ -179,14 +196,25 @@ export default function WordGenerator() {
                         How long should your word be?
                       </FormDescription>
                       <FormControl>
-                        <Input
-                          placeholder="shadcn"
-                          type="number"
-                          min={0}
-                          {...field}
-                        />
+                        <Input type="number" min={0} {...field} />
                       </FormControl>
 
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={randomWordForm.control}
+                  name="whatToInclude"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormDescription>
+                        Which letters do you want to include? (may not generate
+                        the word sometimes)
+                      </FormDescription>
+                      <FormControl>
+                        <Input type="text" {...field} />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -221,7 +249,7 @@ export default function WordGenerator() {
 }
 
 const linksToCheckAvailability = [
-  { name: "google Search", link: "https://www.google.com/search?q=username" },
+  { name: "google Search", link: 'https://www.google.com/search?q="username"' },
   { name: "email Checker", link: "https://email-checker.net" },
   { name: "reddit", link: "https://reddit.com/user/username" },
   { name: "instagram", link: "https://instagram.com/username" },
@@ -265,6 +293,7 @@ function GeneratedWord({ word }: { word: string }) {
                   href={link.link.replace("username", word)}
                   target="_blank"
                   className="capitalize bg-muted px-3 py-1 rounded-md"
+                  key={link.link}
                 >
                   {link.name}
                 </Link>
