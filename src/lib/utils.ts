@@ -21,7 +21,7 @@ export function shuffleArray(array: string[]) {
 }
 
 export function splitByVowels(word: string) {
-  const vowels = ["a", "e", "i", "o", "u"];
+  const vowels = ["a", "e", "i", "o", "u", "y"];
   let splittedWord = word.toLocaleLowerCase();
   vowels.map(
     (vowel) => (splittedWord = splittedWord.replaceAll(vowel, `${vowel} `))

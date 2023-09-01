@@ -221,8 +221,8 @@ export default function WordGenerator() {
 }
 
 const linksToCheckAvailability = [
-  { name: "domain", link: "https://username.com/" },
-  { name: "google", link: "https://accounts.google.com/" },
+  { name: "google Search", link: "https://www.google.com/search?q=username" },
+  { name: "email Checker", link: "https://email-checker.net" },
   { name: "reddit", link: "https://reddit.com/user/username" },
   { name: "instagram", link: "https://instagram.com/username" },
   { name: "tikTok", link: "https://tiktok.com/@username" },
@@ -231,6 +231,7 @@ const linksToCheckAvailability = [
   { name: "twitch", link: "https://twitch.tv/username" },
   { name: "youtube", link: "https://youtube.com/@username" },
   { name: "vercel", link: "https://username.vercel.app" },
+  { name: "domain", link: "https://username.com/" },
 ];
 
 function GeneratedWord({ word }: { word: string }) {
