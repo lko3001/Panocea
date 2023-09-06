@@ -123,7 +123,6 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify(props),
       });
       const data = await res.json();
-      console.log("ELEMENT CREATED TO DB", userData.user.todos);
       // This swaps the new created element with the actual element created to the DB
       setUserData((prev) => ({
         ...prev,
@@ -133,7 +132,7 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
             ...prev.user[localWhere].map((el) =>
               el.id === temporaryId ? data : el
             ),
-          ].reverse(),
+          ],
         },
       }));
       return data;

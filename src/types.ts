@@ -3,6 +3,7 @@ import { prisma } from "@/prisma/client";
 interface IdStuff {
   id?: string;
   userId?: string;
+  updatedAt?: string;
 }
 
 export interface Todo extends IdStuff {

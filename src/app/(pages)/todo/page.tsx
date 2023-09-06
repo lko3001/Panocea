@@ -25,6 +25,17 @@ export default function Todo() {
       return 1;
     }
   }
+  function compareDate(a: Todo, b: Todo) {
+    console.log(a.updatedAt, b.updatedAt);
+    if (a.updatedAt === undefined && b.updatedAt === undefined) {
+      return 0;
+    } else if (a.updatedAt === undefined) {
+      return -1;
+    } else if (b.updatedAt === undefined) {
+      return 1;
+    }
+    return new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime();
+  }
 
   async function createTodo() {
     if (inputRef.current && inputRef.current.value) {
@@ -65,7 +76,7 @@ export default function Todo() {
       )}
       {userData.user &&
         userData.user.todos
-          .reverse()
+          .sort(compareDate)
           .sort(comparePinned)
           .map((todo) => {
             const isTemporary = todo.id!.startsWith("temporary");
