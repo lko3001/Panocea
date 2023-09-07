@@ -1,6 +1,6 @@
 "use client";
 
-import { Todo } from "@/types";
+import { TodoFixed } from "@/types";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { userData, Crud } = useGlobal();
 
-  function comparePinned(a: Todo, b: Todo) {
+  function comparePinned(a: TodoFixed, b: TodoFixed) {
     if (a.pinned === b.pinned) {
       return 0;
     } else if (a.pinned === true) {
@@ -25,7 +25,7 @@ export default function Todo() {
       return 1;
     }
   }
-  function compareDate(a: Todo, b: Todo) {
+  function compareDate(a: TodoFixed, b: TodoFixed) {
     console.log(a.updatedAt, b.updatedAt);
     if (a.updatedAt === undefined && b.updatedAt === undefined) {
       return 0;
@@ -45,6 +45,7 @@ export default function Todo() {
           pinned: false,
           text: inputRef.current.value,
           userId: userData.user.id,
+          category: null,
         },
         where: "todo",
       });

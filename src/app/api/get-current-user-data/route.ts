@@ -16,6 +16,7 @@ export async function POST(request: Request) {
         finances: true,
         todos: true,
         rssfeeds: true,
+        notes: true,
       },
     });
     return NextResponse.json({ user });

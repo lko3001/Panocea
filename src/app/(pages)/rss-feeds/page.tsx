@@ -73,7 +73,11 @@ export default function RssFeeds() {
       Crud({
         where: "rssFeed",
         method: "create",
-        what: { link: inputRef.current.value, userId: userData.user.id },
+        what: {
+          link: inputRef.current.value,
+          userId: userData.user.id,
+          category: null,
+        },
       });
       inputRef.current.value = "";
     }

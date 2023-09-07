@@ -1,16 +1,30 @@
 import { prisma } from "@/prisma/client";
+import { Note, RssFeed, Finance, Todo, User } from "@prisma/client";
 
-interface IdStuff {
-  id?: string;
-  userId?: string;
-  updatedAt?: string;
-}
+type MakeOptional<Type, Key extends keyof Type> = Omit<Type, Key> &
+  Partial<Pick<Type, Key>>;
+export type TodoFixed = MakeOptional<Todo, "updatedAt" | "id">;
+export type RssFeedFixed = MakeOptional<RssFeed, "updatedAt" | "id">;
+export type FinanceFixed = MakeOptional<Finance, "updatedAt" | "id">;
+export type NoteFixed = MakeOptional<Note, "updatedAt" | "id">;
 
-export interface Todo extends IdStuff {
-  text: string;
-  pinned: boolean;
-  category?: string;
-}
+// interface IdStuff {
+//   id?: string;
+//   userId?: string;
+//   updatedAt?: string;
+// }
+
+// export interface Todo extends IdStuff {
+//   text: string;
+//   pinned: boolean;
+//   category?: string;
+// }
+
+// export interface Note extends IdStuff {
+//   title: string;
+//   description?: string;
+//   content: string;
+// }
 
 export interface Route {
   slug: string;
@@ -19,33 +33,28 @@ export interface Route {
   requiresLogin: boolean;
 }
 
-export interface RssFeed extends IdStuff {
-  link: string;
-  category?: string;
-}
+// export interface RssFeed extends IdStuff {
+//   link: string;
+//   category?: string;
+// }
 
-export interface FinanceItem extends IdStuff {
-  price: number;
-  title: string;
-  description: string | undefined;
-  category: string;
-  type: "entry" | "loss";
-}
+// export interface FinanceItem extends IdStuff {
+//   price: number;
+//   title: string;
+//   description: string | undefined;
+//   category: string;
+//   type: "entry" | "loss";
+// }
 
 export interface UserData {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: null | string;
-    image: string;
-  } & Data;
+  user: User & Data;
 }
 
 export interface Data {
-  todos: Todo[];
-  rssFeeds: RssFeed[];
-  finances: FinanceItem[];
+  todos: TodoFixed[];
+  rssFeeds: RssFeedFixed[];
+  finances: FinanceFixed[];
+  notes: NoteFixed[];
 }
 
 export interface PomodoroTimers {

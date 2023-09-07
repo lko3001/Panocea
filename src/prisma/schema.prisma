@@ -41,6 +41,16 @@ model Finance {
   user        User     @relation(fields: [userId], references: [id])
 }
 
+model Note {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  content     String
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -79,6 +89,7 @@ model User {
   rssfeeds      RssFeed[]
   todos         Todo[]
   finances      Finance[]
+  notes         Note[]
 }
 
 model VerificationToken {

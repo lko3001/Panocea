@@ -27,7 +27,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { FinanceItem } from "@/types";
+import { FinanceFixed } from "@/types";
 import { useGlobal } from "@/components/context/GlobalContext";
 import { DialogContent, Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -70,8 +70,8 @@ export default function Debt() {
   const [financeCategories, setFinanceCategories] = useState<
     (string | undefined)[]
   >([]);
-  const [losses, setLosses] = useState<FinanceItem[]>([]);
-  const [entries, setEntries] = useState<FinanceItem[]>([]);
+  const [losses, setLosses] = useState<FinanceFixed[]>([]);
+  const [entries, setEntries] = useState<FinanceFixed[]>([]);
 
   useEffect(() => {
     if (userData.user) {
@@ -85,7 +85,7 @@ export default function Debt() {
 
   const [tabValue, setTabValue] = useState<"loss" | "entry">("entry");
 
-  function getHowMuchForCategory(financeArray: FinanceItem[]) {
+  function getHowMuchForCategory(financeArray: FinanceFixed[]) {
     const categories: string[] = Array.from(
       new Set(financeArray.map((finance) => finance.category))
     ).filter((el) => Boolean(el));
@@ -132,7 +132,7 @@ export default function Debt() {
       what: {
         type: tabValue as "entry" | "loss",
         title: formData.title,
-        description: formData.description,
+        description: formData.description || null,
         price: Number(formData.price),
         category:
           formData.category === newCategoryText
@@ -448,7 +448,7 @@ function DataTableDemo<TData, TValue>() {
     );
   };
 
-  const columns: ColumnDef<FinanceItem>[] = [
+  const columns: ColumnDef<FinanceFixed>[] = [
     {
       id: "select",
       header: ({ table }) => (
