@@ -43,6 +43,12 @@
       "requiresLogin": true
     },
     {
+      "slug": "/text-editor",
+      "name": "Text Editor",
+      "category": "productivity",
+      "requiresLogin": true
+    },
+    {
       "slug": "/",
       "name": "Home",
       "category": "",

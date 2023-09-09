@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Source_Code_Pro } from "next/font/google";
 import { GlobalContextProvider } from "@/components/context/GlobalContext";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import AuthProvider from "@/components/layout/AuthProvider";
@@ -8,6 +8,10 @@ import { PomodoroContextProvider } from "@/components/context/PomodoroContext";
 
 const inter = Inter({
   subsets: ["latin"],
+});
+const sourceCodePro = Source_Code_Pro({
+  subsets: ["latin"],
+  variable: "--sourceCodePro",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} ${sourceCodePro.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
             <GlobalContextProvider>

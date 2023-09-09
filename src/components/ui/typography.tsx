@@ -8,16 +8,7 @@ function H1({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <h1
-      className={cn(
-        "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl",
-        className
-      )}
-    >
-      {children}
-    </h1>
-  );
+  return <h1 className={cn("shadcn-1", className)}>{children}</h1>;
 }
 function H2({
   children,
@@ -26,16 +17,7 @@ function H2({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <h2
-      className={cn(
-        "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0",
-        className
-      )}
-    >
-      {children}
-    </h2>
-  );
+  return <h2 className={cn("shadcn-h2", className)}>{children}</h2>;
 }
 function H3({
   children,
@@ -44,16 +26,7 @@ function H3({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <h3
-      className={cn(
-        "scroll-m-20 text-2xl font-semibold tracking-tight",
-        className
-      )}
-    >
-      {children}
-    </h3>
-  );
+  return <h3 className={cn("shadcn-h3", className)}>{children}</h3>;
 }
 function H4({
   children,
@@ -62,16 +35,7 @@ function H4({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <h4
-      className={cn(
-        "scroll-m-20 text-xl font-semibold tracking-tight",
-        className
-      )}
-    >
-      {children}
-    </h4>
-  );
+  return <h4 className={cn("shadcn-h4", className)}>{children}</h4>;
 }
 
 function Monospace({
@@ -81,16 +45,7 @@ function Monospace({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <span
-      className={cn(
-        "font-mono px-2 py-[3px] text-sm rounded-md bg-muted",
-        className
-      )}
-    >
-      {children}
-    </span>
-  );
+  return <span className={cn("shadcn-monospace", className)}>{children}</span>;
 }
 
 export { H1, H2, H3, H4, Monospace };

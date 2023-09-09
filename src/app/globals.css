@@ -78,4 +78,51 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .shadcn-h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+  }
+  .shadcn-h2 {
+    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
+  }
+  .shadcn-h3 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+  .shadcn-h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+  .shadcn-monospace {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+  .shadcn-paragraph {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
+  }
+  .shadcn-blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+  }
+  .shadcn-ol {
+    @apply my-6 ml-6 list-decimal [&>li]:mt-2;
+  }
+  .shadcn-ul {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  .tiptap-editor:focus {
+    @apply outline-none;
+  }
+  .tiptap-editor {
+    @apply z-0;
+  }
+  h1.tiptap-heading {
+    @apply shadcn-h1;
+  }
+  h2.tiptap-heading {
+    @apply shadcn-h2;
+  }
+  h3.tiptap-heading {
+    @apply shadcn-h3;
+  }
+  h4.tiptap-heading {
+    @apply shadcn-h4;
+  }
 }
