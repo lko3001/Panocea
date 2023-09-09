@@ -37,6 +37,7 @@
     "@tanstack/react-table": "^8.9.3",
     "@tiptap/extension-blockquote": "^2.1.8",
     "@tiptap/extension-code-block": "^2.1.8",
+    "@tiptap/extension-code-block-lowlight": "^2.1.8",
     "@tiptap/extension-heading": "^2.1.8",
     "@tiptap/extension-horizontal-rule": "^2.1.8",
     "@tiptap/extension-paragraph": "^2.1.8",
@@ -54,6 +55,8 @@
     "cmdk": "^0.2.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
+    "highlight.js": "^11.6.0",
+    "lowlight": "^2.7.0",
     "lucide-react": "^0.263.1",
     "moment": "^2.29.4",
     "next": "13.4.12",
@@ -76,6 +79,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/highlight.js": "^10.1.0",
     "@types/uuid": "^9.0.2",
     "@types/xml2js": "^0.4.11",
     "file-loader": "^6.2.0",

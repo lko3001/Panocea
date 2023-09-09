@@ -1,30 +1,30 @@
 "use client";
-import { H2 } from "@/components/ui/typography";
-import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import { useEditor, EditorContent, ReactNodeViewRenderer } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  CodeIcon,
-  CodeSandboxLogoIcon,
-  CursorTextIcon,
-  FontBoldIcon,
-  FontItalicIcon,
-  HeadingIcon,
-  StrikethroughIcon,
-} from "@radix-ui/react-icons";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { useRef, useState } from "react";
+import css from "highlight.js/lib/languages/css";
+import js from "highlight.js/lib/languages/javascript";
+import ts from "highlight.js/lib/languages/typescript";
+import html from "highlight.js/lib/languages/xml";
+import { lowlight } from "lowlight";
+import CodeBlockComponent from "@/components/layout/CodeBlockComponent";
+import Toolbar from "@/components/tiptap/Toolbar";
+
+lowlight.registerLanguage("html", html);
+lowlight.registerLanguage("css", css);
+lowlight.registerLanguage("js", js);
+lowlight.registerLanguage("ts", ts);
 
 export default function TextEditor() {
+  const titleRef = useRef<HTMLInputElement>(null);
   const editor = useEditor({
     extensions: [
+      CodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlockComponent);
+        },
+      }).configure({ lowlight }),
       StarterKit.configure({
         heading: {
           HTMLAttributes: {
@@ -63,155 +63,38 @@ export default function TextEditor() {
         class: "tiptap-editor",
       },
     },
-    content: "I was thinking about...",
   });
 
   const [hasClicked, setHasClicked] = useState(false);
 
   return (
     <div className="max-w-5xl mx-auto">
-      <H2>Text Editor</H2>
+      <input
+        type="text"
+        ref={titleRef}
+        placeholder="Insert title..."
+        className="block w-full shadcn-h2 bg-transparent focus:outline-none placeholder:text-muted-foreground"
+      />
       {editor && (
         <div>
-          <Menu editor={editor} />
-          <EditorContent
-            onClick={() => {
-              if (!hasClicked) {
+          <Toolbar title={titleRef.current!.value} editor={editor} />
+          {!hasClicked && (
+            <p
+              className="text-muted-foreground"
+              onClick={() => {
                 editor.chain().focus().clearContent().run();
                 setHasClicked(true);
-              }
-            }}
+              }}
+            >
+              I was thinking about...
+            </p>
+          )}
+          <EditorContent
             editor={editor}
+            className={hasClicked ? "" : "invisible"}
           />
         </div>
       )}
     </div>
-  );
-}
-
-function Menu({ editor }: { editor: Editor }) {
-  return (
-    <section className="my-4 flex flex-wrap flex-row justify-center gap-4">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 1 }).run()
-              }
-              size={"icon"}
-              variant={"outline"}
-            >
-              <HeadingIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Heading</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() => editor.chain().focus().toggleBold().run()}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <FontBoldIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Bold</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() => editor.chain().focus().toggleItalic().run()}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <FontItalicIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Italic</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() => editor.chain().focus().toggleStrike().run()}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <StrikethroughIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Strike</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() => editor.chain().focus().toggleCode().run()}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <CodeIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Inline Code</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <CodeSandboxLogoIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Code Block</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() => editor.chain().focus().toggleBlockquote().run()}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <CursorTextIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Blockquote</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() => editor.chain().focus().undo().run()}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Undo</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <Button
-              onClick={() => editor.chain().focus().redo().run()}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <ArrowRightIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Redo</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </section>
   );
 }

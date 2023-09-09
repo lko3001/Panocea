@@ -25,15 +25,16 @@ interface Props {
   isShortcutOpen: boolean;
   userData: UserData;
   clearUserData: () => void;
-  Crud: <T extends PrismaCleared>(props: PrismaBody<T>) => any;
+  Crud: <T extends PrismaCleared>(
+    props: PrismaBody<T>,
+    updateLocally?: boolean
+  ) => any;
 }
 
 const GlobalContext = createContext({} as Props);
-
 export function useGlobal() {
   return useContext(GlobalContext);
 }
-
 export function GlobalContextProvider({ children }: { children: ReactNode }) {
   const [isShortcutOpen, setIsShortcutOpen] = useState(false);
   const [userData, setUserData] = useState<UserData>({} as UserData);
@@ -67,54 +68,59 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     setUserData({} as UserData);
   }
 
-  async function Crud<T extends PrismaCleared>(props: PrismaBody<T>) {
+  async function Crud<T extends PrismaCleared>(
+    props: PrismaBody<T>,
+    updateLocally?: boolean
+  ) {
     const temporaryId = `temporary-${v4()}`;
     const localWhere = (props.where + "s") as Pluralize<PrismaCleared>;
 
-    switch (props.method) {
-      case "update":
-        setUserData((prev) => ({
-          ...prev,
-          user: {
-            ...prev.user,
-            [localWhere]: [
-              ...prev.user[localWhere].map((el) =>
-                el.id === props.what.id ? props.what : el
-              ),
-            ],
-          },
-        }));
-        break;
-      case "create":
-        setUserData((prev) => ({
-          ...prev,
-          user: {
-            ...prev.user,
-            [localWhere]: [
-              ...prev.user[localWhere],
-              { ...props.what, id: temporaryId },
-            ],
-          },
-        }));
-        break;
-      case "deleteMany":
-        if (props.what.find((id) => id.startsWith("temporary"))) {
-          console.log(
-            `An error occured because you tried to delete an element that you just created before it got created in the database. Wait and try again`
-          );
-        }
-        setUserData((prev) => ({
-          ...prev,
-          user: {
-            ...prev.user,
-            [localWhere]: [
-              ...prev.user[localWhere].filter(
-                (el) => !props.what.includes(el.id!)
-              ),
-            ],
-          },
-        }));
-        break;
+    if (updateLocally) {
+      switch (props.method) {
+        case "update":
+          setUserData((prev) => ({
+            ...prev,
+            user: {
+              ...prev.user,
+              [localWhere]: [
+                ...prev.user[localWhere].map((el) =>
+                  el.id === props.what.id ? props.what : el
+                ),
+              ],
+            },
+          }));
+          break;
+        case "create":
+          setUserData((prev) => ({
+            ...prev,
+            user: {
+              ...prev.user,
+              [localWhere]: [
+                ...prev.user[localWhere],
+                { ...props.what, id: temporaryId },
+              ],
+            },
+          }));
+          break;
+        case "deleteMany":
+          if (props.what.find((id) => id.startsWith("temporary"))) {
+            console.log(
+              `An error occured because you tried to delete an element that you just created before it got created in the database. Wait and try again`
+            );
+          }
+          setUserData((prev) => ({
+            ...prev,
+            user: {
+              ...prev.user,
+              [localWhere]: [
+                ...prev.user[localWhere].filter(
+                  (el) => !props.what.includes(el.id!)
+                ),
+              ],
+            },
+          }));
+          break;
+      }
     }
 
     try {
@@ -124,29 +130,33 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
       });
       const data = await res.json();
       // This swaps the new created element with the actual element created to the DB
-      setUserData((prev) => ({
-        ...prev,
-        user: {
-          ...prev.user,
-          [localWhere]: [
-            ...prev.user[localWhere].map((el) =>
-              el.id === temporaryId ? data : el
-            ),
-          ],
-        },
-      }));
+      if (updateLocally) {
+        setUserData((prev) => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            [localWhere]: [
+              ...prev.user[localWhere].map((el) =>
+                el.id === temporaryId ? data : el
+              ),
+            ],
+          },
+        }));
+      }
       return data;
     } catch (err) {
       console.log(err);
-      setUserData((prev) => ({
-        ...prev,
-        user: {
-          ...prev.user,
-          [localWhere]: [
-            ...prev.user[localWhere].filter((el) => el.id !== temporaryId),
-          ].reverse(),
-        },
-      }));
+      if (updateLocally) {
+        setUserData((prev) => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            [localWhere]: [
+              ...prev.user[localWhere].filter((el) => el.id !== temporaryId),
+            ].reverse(),
+          },
+        }));
+      }
       toast({
         title: "Try again",
         description: "The database didn't create the todo",

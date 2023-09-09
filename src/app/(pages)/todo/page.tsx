@@ -26,7 +26,6 @@ export default function Todo() {
     }
   }
   function compareDate(a: TodoFixed, b: TodoFixed) {
-    console.log(a.updatedAt, b.updatedAt);
     if (a.updatedAt === undefined && b.updatedAt === undefined) {
       return 0;
     } else if (a.updatedAt === undefined) {
@@ -39,17 +38,19 @@ export default function Todo() {
 
   async function createTodo() {
     if (inputRef.current && inputRef.current.value) {
-      Crud({
-        method: "create",
-        what: {
-          pinned: false,
-          text: inputRef.current.value,
-          userId: userData.user.id,
-          category: null,
+      Crud(
+        {
+          method: "create",
+          what: {
+            pinned: false,
+            text: inputRef.current.value,
+            userId: userData.user.id,
+            category: null,
+          },
+          where: "todo",
         },
-        where: "todo",
-      });
-
+        true
+      );
       inputRef.current.value = "";
     }
   }
@@ -93,11 +94,14 @@ export default function Todo() {
                     className="p-2 aspect-square"
                     disabled={isTemporary}
                     onClick={() => {
-                      Crud({
-                        method: "deleteMany",
-                        where: "todo",
-                        what: [todo.id!],
-                      });
+                      Crud(
+                        {
+                          method: "deleteMany",
+                          where: "todo",
+                          what: [todo.id!],
+                        },
+                        true
+                      );
                     }}
                   >
                     <Cross2Icon />

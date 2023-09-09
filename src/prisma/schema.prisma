@@ -44,7 +44,6 @@ model Finance {
 model Note {
   id          String   @id @default(cuid())
   title       String
-  description String?
   content     String
   updatedAt   DateTime @updatedAt
   userId      String

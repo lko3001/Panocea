@@ -45,7 +45,7 @@
     {
       "slug": "/text-editor",
       "name": "Text Editor",
-      "category": "productivity",
+      "category": "tools",
       "requiresLogin": true
     },
     {
