@@ -127,7 +127,7 @@ export default function Debt() {
   function handleNewFinanceSubmit(formData: z.infer<typeof FinanceFormSchema>) {
     setIsOpen((p) => !p);
     Crud({
-      method: "create",
+      method: "upsert",
       where: "finance",
       what: {
         type: tabValue as "entry" | "loss",
@@ -139,6 +139,7 @@ export default function Debt() {
             ? formData.newCategory!
             : formData.category,
         userId: userData.user.id,
+        id: undefined,
       },
     });
     financeForm.reset();

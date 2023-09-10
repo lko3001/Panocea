@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { compareDate } from "@/lib/utils";
 
 const formSchema = z.object({
   title: z.string().nonempty(),
@@ -54,7 +55,7 @@ export default function Notes() {
             render={({ field }) => (
               <FormItem className="grow">
                 <FormControl>
-                  <Input placeholder="Title..." {...field} />
+                  <Input autoFocus placeholder="Title..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -68,19 +69,26 @@ export default function Notes() {
           <LoadingSkeleton className={"h-[68px]"} quantity={5} />
         )}
         {userData.user &&
-          userData.user.notes.reverse().map((note) => (
-            <Link
-              className="block"
-              href={{ pathname: "/text-editor", query: { id: note.id } }}
-            >
+          userData.user.notes.sort(compareDate).map((note) => (
+            <>
               <Card>
-                <CardContent className="py-4 pr-4 flex flex-row items-center gap-4">
-                  <p className="grow">{note.title}</p>
+                <CardContent className="pb-0 pr-4 pl-0 flex flex-row items-center gap-4">
+                  <Link
+                    className="grow h-[68px] pl-6 flex items-center "
+                    href={{
+                      pathname: "/text-editor",
+                      query: { id: note.id },
+                    }}
+                  >
+                    {note.title}
+                  </Link>
                   <Button
                     variant={"ghost"}
-                    className="p-2 aspect-square"
+                    className="p-2 aspect-square z-50"
                     onClick={(e) => {
                       e.stopPropagation();
+                      console.log("Clicked");
+                      return;
                       Crud({
                         method: "deleteMany",
                         where: "note",
@@ -92,7 +100,7 @@ export default function Notes() {
                   </Button>
                 </CardContent>
               </Card>
-            </Link>
+            </>
           ))}
       </div>
     </div>

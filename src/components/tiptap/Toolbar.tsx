@@ -82,7 +82,6 @@ export default function Toolbar({
 
   return (
     <section className="my-4 flex flex-wrap flex-row justify-center gap-4">
-      {noteId}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

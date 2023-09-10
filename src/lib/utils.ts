@@ -34,3 +34,14 @@ export function getRandomIntInRange(min: number, max: number) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function compareDate(a: any, b: any) {
+  if (a.updatedAt === undefined && b.updatedAt === undefined) {
+    return 0;
+  } else if (a.updatedAt === undefined) {
+    return -1;
+  } else if (b.updatedAt === undefined) {
+    return 1;
+  }
+  return new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime();
+}

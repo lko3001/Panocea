@@ -72,11 +72,12 @@ export default function RssFeeds() {
     if (inputRef.current && inputRef.current.value) {
       Crud({
         where: "rssFeed",
-        method: "create",
+        method: "upsert",
         what: {
           link: inputRef.current.value,
           userId: userData.user.id,
           category: null,
+          id: undefined,
         },
       });
       inputRef.current.value = "";

@@ -9,6 +9,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
 import { H2 } from "@/components/ui/typography";
 import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
+import { compareDate } from "@/lib/utils";
 
 export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -22,16 +23,6 @@ export default function Todo() {
     } else {
       return 1;
     }
-  }
-  function compareDate(a: TodoFixed, b: TodoFixed) {
-    if (a.updatedAt === undefined && b.updatedAt === undefined) {
-      return 0;
-    } else if (a.updatedAt === undefined) {
-      return -1;
-    } else if (b.updatedAt === undefined) {
-      return 1;
-    }
-    return new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime();
   }
 
   function todoStyling(todo: TodoFixed) {
@@ -63,12 +54,13 @@ export default function Todo() {
   async function createTodo() {
     if (inputRef.current && inputRef.current.value) {
       Crud({
-        method: "create",
+        method: "upsert",
         what: {
           pinned: false,
           text: inputRef.current.value,
           userId: userData.user.id,
           category: null,
+          id: undefined,
         },
         where: "todo",
       });
