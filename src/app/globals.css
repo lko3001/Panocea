@@ -124,6 +124,10 @@
   }
 }
 
+.ProseMirror {
+  /* you need this otherwise the text inside the editor will go on top of the navbar menus */
+  position: static !important;
+}
 .tiptap pre code.hljs {
   display: block;
   overflow-x: auto;

@@ -24,9 +24,11 @@ import { useToast } from "../ui/use-toast";
 export default function Toolbar({
   editor,
   title,
+  id,
 }: {
   editor: Editor;
   title: string;
+  id: string | undefined;
 }) {
   const { Crud, userData } = useGlobal();
   const { toast } = useToast();
@@ -41,12 +43,13 @@ export default function Toolbar({
       });
     } else {
       const note = Crud({
-        method: "create",
+        method: id ? "update" : "create",
         where: "note",
         what: {
           content: editorValue,
           title: title,
           userId: userData.user.id,
+          id: id ? id : "",
         },
       });
       if (note) {

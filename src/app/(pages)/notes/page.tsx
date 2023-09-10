@@ -2,14 +2,9 @@
 
 import { useGlobal } from "@/components/context/GlobalContext";
 import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { H2 } from "@/components/ui/typography";
+import Link from "next/link";
 
 export default function Notes() {
   const { userData, Crud } = useGlobal();
@@ -22,14 +17,13 @@ export default function Notes() {
         )}
         {userData.user &&
           userData.user.notes.map((note) => (
-            <Card>
-              <CardHeader>
-                <CardTitle>{note.title}</CardTitle>
-                {note.description && (
-                  <CardDescription>{note.description}</CardDescription>
-                )}
-              </CardHeader>
-            </Card>
+            <Link href={{ pathname: "/text-editor", query: { id: note.id } }}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>{note.title}</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
           ))}
       </div>
     </div>
