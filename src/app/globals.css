@@ -133,6 +133,9 @@
   overflow-x: auto;
   padding: 1em;
 }
+.tiptap .shadcn-monospace {
+  z-index: -1;
+}
 .tiptap code.hljs {
   padding: 3px 5px;
 }

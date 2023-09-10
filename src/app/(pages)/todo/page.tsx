@@ -34,21 +34,44 @@ export default function Todo() {
     return new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime();
   }
 
+  function todoStyling(todo: TodoFixed) {
+    const result = {
+      classes: "",
+      text: todo.text,
+    };
+
+    const symbolClasses = [
+      { symbol: "!", classes: "outline outline-red-500" },
+      { symbol: ".", classes: "outline outline-blue-500" },
+      { symbol: "?", classes: "outline outline-yellow-500" },
+    ];
+
+    symbolClasses.map((el) => {
+      if (todo.text.startsWith(el.symbol)) {
+        result.classes += el.classes;
+        if (todo.text.startsWith(`${el.symbol} `)) {
+          result.text = result.text.slice(2);
+        } else {
+          result.text = result.text.slice(1);
+        }
+      }
+    });
+
+    return result;
+  }
+
   async function createTodo() {
     if (inputRef.current && inputRef.current.value) {
-      Crud(
-        {
-          method: "create",
-          what: {
-            pinned: false,
-            text: inputRef.current.value,
-            userId: userData.user.id,
-            category: null,
-          },
-          where: "todo",
+      Crud({
+        method: "create",
+        what: {
+          pinned: false,
+          text: inputRef.current.value,
+          userId: userData.user.id,
+          category: null,
         },
-        true
-      );
+        where: "todo",
+      });
       inputRef.current.value = "";
     }
   }
@@ -65,7 +88,7 @@ export default function Todo() {
       >
         <Input
           type="text"
-          placeholder="What do I have to do?"
+          placeholder="Try to start with !, ? or ."
           autoFocus
           ref={inputRef}
         />
@@ -83,23 +106,22 @@ export default function Todo() {
             return (
               <Card
                 key={todo.id}
-                className={`${isTemporary ? "animate-pulse" : ""}`}
+                className={`${isTemporary ? "animate-pulse" : ""} ${
+                  todoStyling(todo).classes
+                }`}
               >
                 <CardContent className="py-4 pr-4 flex flex-row items-center gap-4">
-                  <p className="grow">{todo.text}</p>
+                  <p className="grow">{todoStyling(todo).text}</p>
                   <Button
                     variant={"ghost"}
                     className="p-2 aspect-square"
                     disabled={isTemporary}
                     onClick={() => {
-                      Crud(
-                        {
-                          method: "deleteMany",
-                          where: "todo",
-                          what: [todo.id!],
-                        },
-                        true
-                      );
+                      Crud({
+                        method: "deleteMany",
+                        where: "todo",
+                        what: [todo.id!],
+                      });
                     }}
                   >
                     <Cross2Icon />

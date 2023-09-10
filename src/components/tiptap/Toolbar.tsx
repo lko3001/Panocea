@@ -62,18 +62,33 @@ export default function Toolbar({
         variant: "destructive",
       });
     } else {
-      const note = await Crud({
-        method: id ? "update" : "create",
-        where: "note",
-        what: {
-          content: editorValue,
-          title: title,
-          userId: userData.user ? userData.user.id : "fakeId",
-          id: id ? id : "",
-        },
-      });
-      if (note) {
-        toast({ title: "Note created with success" });
+      if (!id) {
+        const note = await Crud({
+          method: "create",
+          where: "note",
+          what: {
+            content: editorValue,
+            title: title,
+            userId: userData.user ? userData.user.id : "fakeId",
+          },
+        });
+        if (note) {
+          toast({ title: "Note created with success" });
+        }
+      } else {
+        const note = await Crud({
+          method: "update",
+          where: "note",
+          what: {
+            content: editorValue,
+            title: title,
+            userId: userData.user ? userData.user.id : "fakeId",
+            id: id,
+          },
+        });
+        if (note) {
+          toast({ title: "Note updated with success" });
+        }
       }
     }
   }

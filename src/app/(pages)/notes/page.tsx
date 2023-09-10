@@ -68,7 +68,7 @@ export default function Notes() {
           <LoadingSkeleton className={"h-[68px]"} quantity={5} />
         )}
         {userData.user &&
-          userData.user.notes.map((note) => (
+          userData.user.notes.reverse().map((note) => (
             <Link
               className="block"
               href={{ pathname: "/text-editor", query: { id: note.id } }}
@@ -79,15 +79,13 @@ export default function Notes() {
                   <Button
                     variant={"ghost"}
                     className="p-2 aspect-square"
-                    onClick={() => {
-                      Crud(
-                        {
-                          method: "deleteMany",
-                          where: "note",
-                          what: [note.id!],
-                        },
-                        true
-                      );
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      Crud({
+                        method: "deleteMany",
+                        where: "note",
+                        what: [note.id!],
+                      });
                     }}
                   >
                     <Cross2Icon />

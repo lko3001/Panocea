@@ -25,10 +25,7 @@ interface Props {
   isShortcutOpen: boolean;
   userData: UserData;
   clearUserData: () => void;
-  Crud: <T extends PrismaCleared>(
-    props: PrismaBody<T>,
-    updateLocally?: boolean
-  ) => any;
+  Crud: <T extends PrismaCleared>(props: PrismaBody<T>) => any;
 }
 
 const GlobalContext = createContext({} as Props);
@@ -68,59 +65,54 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     setUserData({} as UserData);
   }
 
-  async function Crud<T extends PrismaCleared>(
-    props: PrismaBody<T>,
-    updateLocally?: boolean
-  ) {
+  async function Crud<T extends PrismaCleared>(props: PrismaBody<T>) {
     const temporaryId = `temporary-${v4()}`;
     const localWhere = (props.where + "s") as Pluralize<PrismaCleared>;
 
-    if (updateLocally) {
-      switch (props.method) {
-        case "update":
-          setUserData((prev) => ({
-            ...prev,
-            user: {
-              ...prev.user,
-              [localWhere]: [
-                ...prev.user[localWhere].map((el) =>
-                  el.id === props.what.id ? props.what : el
-                ),
-              ],
-            },
-          }));
-          break;
-        case "create":
-          setUserData((prev) => ({
-            ...prev,
-            user: {
-              ...prev.user,
-              [localWhere]: [
-                ...prev.user[localWhere],
-                { ...props.what, id: temporaryId },
-              ],
-            },
-          }));
-          break;
-        case "deleteMany":
-          if (props.what.find((id) => id.startsWith("temporary"))) {
-            console.log(
-              `An error occured because you tried to delete an element that you just created before it got created in the database. Wait and try again`
-            );
-          }
-          setUserData((prev) => ({
-            ...prev,
-            user: {
-              ...prev.user,
-              [localWhere]: [
-                ...prev.user[localWhere].filter(
-                  (el) => !props.what.includes(el.id!)
-                ),
-              ],
-            },
-          }));
-          break;
-      }
+    switch (props.method) {
+      case "update":
+        setUserData((prev) => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            [localWhere]: [
+              ...prev.user[localWhere].map((el) =>
+                el.id === props.what.id ? props.what : el
+              ),
+            ],
+          },
+        }));
+        break;
+      case "create":
+        setUserData((prev) => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            [localWhere]: [
+              ...prev.user[localWhere],
+              { ...props.what, id: temporaryId },
+            ],
+          },
+        }));
+        break;
+      case "deleteMany":
+        if (props.what.find((id) => id.startsWith("temporary"))) {
+          console.log(
+            `An error occured because you tried to delete an element that you just created before it got created in the database. Wait and try again`
+          );
+        }
+        setUserData((prev) => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            [localWhere]: [
+              ...prev.user[localWhere].filter(
+                (el) => !props.what.includes(el.id!)
+              ),
+            ],
+          },
+        }));
+        break;
     }
 
     try {
@@ -130,33 +122,29 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
       });
       const data = await res.json();
       // This swaps the new created element with the actual element created to the DB
-      if (updateLocally) {
-        setUserData((prev) => ({
-          ...prev,
-          user: {
-            ...prev.user,
-            [localWhere]: [
-              ...prev.user[localWhere].map((el) =>
-                el.id === temporaryId ? data : el
-              ),
-            ],
-          },
-        }));
-      }
+      setUserData((prev) => ({
+        ...prev,
+        user: {
+          ...prev.user,
+          [localWhere]: [
+            ...prev.user[localWhere].map((el) =>
+              el.id === temporaryId ? data : el
+            ),
+          ],
+        },
+      }));
       return data;
     } catch (err) {
       console.log(err);
-      if (updateLocally) {
-        setUserData((prev) => ({
-          ...prev,
-          user: {
-            ...prev.user,
-            [localWhere]: [
-              ...prev.user[localWhere].filter((el) => el.id !== temporaryId),
-            ].reverse(),
-          },
-        }));
-      }
+      setUserData((prev) => ({
+        ...prev,
+        user: {
+          ...prev.user,
+          [localWhere]: [
+            ...prev.user[localWhere].filter((el) => el.id !== temporaryId),
+          ].reverse(),
+        },
+      }));
       console.log("Ciao");
       toast({
         title: "Try again",
