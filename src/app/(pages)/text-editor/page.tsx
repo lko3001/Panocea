@@ -77,9 +77,9 @@ export default function TextEditor() {
       const noteParam = userData.user.notes.find(
         (note) => note.id === searchParams.get("id")
       );
-      if (noteParam) {
+      if (noteParam && editor) {
         titleRef.current!.value = noteParam.title;
-        editor!.commands.setContent(JSON.parse(noteParam.content));
+        editor.commands.setContent(JSON.parse(noteParam.content));
         setHasClicked(true);
         setNoteId(searchParams.get("id") as string);
       }
