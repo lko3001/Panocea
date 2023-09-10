@@ -8,9 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
 import { H2 } from "@/components/ui/typography";
-import { Skeleton } from "@/components/ui/skeleton";
 import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
-import { v4 } from "uuid";
 
 export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);

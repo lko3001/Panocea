@@ -157,12 +157,15 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
           },
         }));
       }
+      console.log("Ciao");
       toast({
         title: "Try again",
-        description: "The database didn't create the todo",
+        description:
+          "The database didn't create the element, make sure you're logged in",
         variant: "destructive",
       });
-      return err;
+      console.log("eee");
+      return null;
     }
   }
 

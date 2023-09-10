@@ -20,6 +20,7 @@ import {
 import { Editor } from "@tiptap/react";
 import { useGlobal } from "../context/GlobalContext";
 import { useToast } from "../ui/use-toast";
+import { useCallback, useEffect } from "react";
 
 export default function Toolbar({
   editor,
@@ -33,6 +34,25 @@ export default function Toolbar({
   const { Crud, userData } = useGlobal();
   const { toast } = useToast();
 
+  // Code to use CTRL S
+  const handleKeyPress = useCallback((e: any) => {
+    if (
+      (window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) &&
+      e.keyCode == 83
+    ) {
+      e.preventDefault();
+      validate();
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
+  // Code to use CTRL S ^^^^
+
   async function validate() {
     const blankEditor = `{"type":"doc","content":[{"type":"paragraph"}]}`;
     const editorValue = JSON.stringify(editor.getJSON());
@@ -42,13 +62,13 @@ export default function Toolbar({
         variant: "destructive",
       });
     } else {
-      const note = Crud({
+      const note = await Crud({
         method: id ? "update" : "create",
         where: "note",
         what: {
           content: editorValue,
           title: title,
-          userId: userData.user.id,
+          userId: userData.user ? userData.user.id : "fakeId",
           id: id ? id : "",
         },
       });

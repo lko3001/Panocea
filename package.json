@@ -82,6 +82,7 @@
     "@types/highlight.js": "^10.1.0",
     "@types/uuid": "^9.0.2",
     "@types/xml2js": "^0.4.11",
+    "depcheck": "^1.4.5",
     "file-loader": "^6.2.0",
     "prisma": "^5.1.1"
   },

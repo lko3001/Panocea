@@ -21,6 +21,7 @@ lowlight.registerLanguage("ts", ts);
 export default function TextEditor() {
   const { userData } = useGlobal();
   const searchParams = useSearchParams();
+  const titleParam = searchParams.get("title");
   const titleRef = useRef<HTMLInputElement>(null);
   const editor = useEditor({
     extensions: [
@@ -67,9 +68,9 @@ export default function TextEditor() {
         class: "tiptap-editor",
       },
     },
+    autofocus: true,
   });
 
-  const [hasClicked, setHasClicked] = useState(false);
   const [noteId, setNoteId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -80,7 +81,6 @@ export default function TextEditor() {
       if (noteParam && editor) {
         titleRef.current!.value = noteParam.title;
         editor.commands.setContent(JSON.parse(noteParam.content));
-        setHasClicked(true);
         setNoteId(searchParams.get("id") as string);
       }
     }
@@ -90,6 +90,7 @@ export default function TextEditor() {
     <div className="max-w-5xl mx-auto">
       <input
         type="text"
+        defaultValue={titleParam ? titleParam : ""}
         ref={titleRef}
         placeholder="Insert title..."
         className="block w-full shadcn-h2 bg-transparent focus:outline-none placeholder:text-muted-foreground"
@@ -101,21 +102,7 @@ export default function TextEditor() {
             id={noteId}
             editor={editor}
           />
-          {!hasClicked && (
-            <p
-              className="text-muted-foreground"
-              onClick={() => {
-                editor.chain().focus().clearContent().run();
-                setHasClicked(true);
-              }}
-            >
-              I was thinking about...
-            </p>
-          )}
-          <EditorContent
-            editor={editor}
-            className={hasClicked ? "" : "invisible"}
-          />
+          <EditorContent editor={editor} />
         </div>
       )}
     </div>
