@@ -70,30 +70,27 @@ export function GlobalContextProvider({ children }: { children: ReactNode }) {
     const localWhere = (props.where + "s") as Pluralize<PrismaCleared>;
 
     switch (props.method) {
-      case "update":
-        setUserData((prev) => ({
-          ...prev,
-          user: {
-            ...prev.user,
-            [localWhere]: [
-              ...prev.user[localWhere].map((el) =>
-                el.id === props.what.id ? props.what : el
-              ),
-            ],
-          },
-        }));
-        break;
-      case "create":
-        setUserData((prev) => ({
-          ...prev,
-          user: {
-            ...prev.user,
-            [localWhere]: [
-              ...prev.user[localWhere],
-              { ...props.what, id: temporaryId },
-            ],
-          },
-        }));
+      case "upsert":
+        setUserData((prev) => {
+          const create = [
+            ...prev.user[localWhere],
+            { ...props.what, id: temporaryId },
+          ];
+
+          const update = [
+            ...prev.user[localWhere].map((el) =>
+              el.id === props.what.id ? props.what : el
+            ),
+          ];
+
+          return {
+            ...prev,
+            user: {
+              ...prev.user,
+              [localWhere]: props.what.id ? update : create,
+            },
+          };
+        });
         break;
       case "deleteMany":
         if (props.what.find((id) => id.startsWith("temporary"))) {

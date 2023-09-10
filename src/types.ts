@@ -95,26 +95,37 @@ export type PrismaBody<T extends PrismaCleared> = {
   where: T;
 } & (
   | {
-      method: "create";
-      what: Data[Pluralize<T>][number] & { userId: string };
+      method: "upsert";
+      what: Data[Pluralize<T>][number] & {
+        userId: string;
+        id: string | undefined;
+      };
     }
-  | {
-      method: "update";
-      what: Data[Pluralize<T>][number] & { userId: string; id: string };
-    }
+  // | {
+  //     method: "create";
+  //     what: Data[Pluralize<T>][number] & { userId: string };
+  //   }
+  // | {
+  //     method: "update";
+  //     what: Data[Pluralize<T>][number] & { userId: string; id: string };
+  //   }
   | { method: "deleteMany"; what: string[] }
 );
 export type CrudBody<T extends Pluralize<PrismaCleared>> = {
   where: T;
 } & (
   | {
-      method: "create";
-      what: Data[T][number] & { userId: string };
+      method: "upsert";
+      what: Data[T][number] & { userId: string; id: string | undefined };
     }
-  | {
-      method: "update";
-      what: Data[T][number] & { userId: string; id: string };
-    }
+  // | {
+  //     method: "create";
+  //     what: Data[T][number] & { userId: string };
+  //   }
+  // | {
+  //     method: "update";
+  //     what: Data[T][number] & { userId: string; id: string };
+  //   }
   | { method: "deleteMany"; what: string[] }
 );
 

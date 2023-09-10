@@ -20,7 +20,8 @@ import {
 import { Editor } from "@tiptap/react";
 import { useGlobal } from "../context/GlobalContext";
 import { useToast } from "../ui/use-toast";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { NoteFixed } from "@/types";
 
 export default function Toolbar({
   editor,
@@ -33,13 +34,11 @@ export default function Toolbar({
 }) {
   const { Crud, userData } = useGlobal();
   const { toast } = useToast();
+  const [noteId, setNoteId] = useState(id);
 
   // Code to use CTRL S
   const handleKeyPress = useCallback((e: any) => {
-    if (
-      (window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) &&
-      e.keyCode == 83
-    ) {
+    if ((e.keyCode == 83 && e.ctrlKey) || (e.keyCode == 83 && e.metaKey)) {
       e.preventDefault();
       validate();
     }
@@ -62,39 +61,28 @@ export default function Toolbar({
         variant: "destructive",
       });
     } else {
-      if (!id) {
-        const note = await Crud({
-          method: "create",
-          where: "note",
-          what: {
-            content: editorValue,
-            title: title,
-            userId: userData.user ? userData.user.id : "fakeId",
-          },
-        });
-        if (note) {
-          toast({ title: "Note created with success" });
-        }
-      } else {
-        const note = await Crud({
-          method: "update",
-          where: "note",
-          what: {
-            content: editorValue,
-            title: title,
-            userId: userData.user ? userData.user.id : "fakeId",
-            id: id,
-          },
-        });
-        if (note) {
-          toast({ title: "Note updated with success" });
-        }
+      const note: NoteFixed | null = await Crud({
+        method: "upsert",
+        where: "note",
+        what: {
+          content: editorValue,
+          title: title,
+
+          // The line below is to assure that a user that is not logged in can't create a new note
+          userId: userData.user ? userData.user.id : "fakeId",
+          id: noteId,
+        },
+      });
+      if (note) {
+        setNoteId(note.id);
+        toast({ title: "Note created with success" });
       }
     }
   }
 
   return (
     <section className="my-4 flex flex-wrap flex-row justify-center gap-4">
+      {noteId}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
