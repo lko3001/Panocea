@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function GetCategories(array: Data["finances"]) {
+export function GetCategories(array: any[]) {
   return Array.from(new Set(array.map((element) => element.category)));
 }
 

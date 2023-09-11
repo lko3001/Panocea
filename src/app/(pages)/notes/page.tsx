@@ -3,9 +3,8 @@
 import { useGlobal } from "@/components/context/GlobalContext";
 import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { H2 } from "@/components/ui/typography";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,22 +12,21 @@ import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { compareDate } from "@/lib/utils";
+import DeleteButton from "@/components/layout/DeleteButton";
 
 const formSchema = z.object({
   title: z.string().nonempty(),
 });
 
 export default function Notes() {
-  const { userData, Crud } = useGlobal();
+  const { userData } = useGlobal();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,22 +80,12 @@ export default function Notes() {
                   >
                     {note.title}
                   </Link>
-                  <Button
-                    variant={"ghost"}
-                    className="p-2 aspect-square z-50"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log("Clicked");
-                      return;
-                      Crud({
-                        method: "deleteMany",
-                        where: "note",
-                        what: [note.id!],
-                      });
-                    }}
-                  >
-                    <Cross2Icon />
-                  </Button>
+                  <DeleteButton
+                    name="note"
+                    where="note"
+                    idsToDelete={[note.id!]}
+                    withDialog
+                  />
                 </CardContent>
               </Card>
             </>

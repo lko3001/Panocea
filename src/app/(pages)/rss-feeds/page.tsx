@@ -4,24 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { Data, YoutubeFeed, YtEntry } from "@/types";
-import Image from "next/image";
+import { YoutubeFeed, YtEntry } from "@/types";
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowDownIcon,
-  ChevronDownIcon,
-  Cross1Icon,
-  Cross2Icon,
-  InfoCircledIcon,
-} from "@radix-ui/react-icons";
+import { ArrowDownIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
 import { H2, Monospace } from "@/components/ui/typography";
 import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
@@ -31,10 +22,10 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import DeleteButton from "@/components/layout/DeleteButton";
 
 type Feed = {
   [key: string]: any;
@@ -193,20 +184,12 @@ export default function RssFeeds() {
         <div className="flex flex-col gap-4 mb-8">
           {userData.user.rssFeeds.map((feed) => (
             <div className="flex flex-row items-center" key={feed.id}>
-              <Button
-                onClick={() => {
-                  Crud({
-                    method: "deleteMany",
-                    where: "rssFeed",
-                    what: [feed.id!],
-                  });
-                  router.push("/rss-feeds");
-                }}
-                variant={"ghost"}
-                className="aspect-square p-1 h-7 mr-2"
-              >
-                <Cross2Icon className="h-4 w-4" />
-              </Button>
+              <DeleteButton
+                name="RSS feed"
+                idsToDelete={[feed.id!]}
+                where="rssFeed"
+                withDialog
+              />
               <Monospace>{feed.link}</Monospace>
             </div>
           ))}

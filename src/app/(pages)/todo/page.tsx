@@ -5,11 +5,11 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { useGlobal } from "@/components/context/GlobalContext";
 import { H2 } from "@/components/ui/typography";
 import LoadingSkeleton from "@/components/layout/LoadingSkeleton";
 import { compareDate } from "@/lib/utils";
+import DeleteButton from "@/components/layout/DeleteButton";
 
 export default function Todo() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -104,20 +104,11 @@ export default function Todo() {
               >
                 <CardContent className="py-4 pr-4 flex flex-row items-center gap-4">
                   <p className="grow">{todoStyling(todo).text}</p>
-                  <Button
-                    variant={"ghost"}
-                    className="p-2 aspect-square"
-                    disabled={isTemporary}
-                    onClick={() => {
-                      Crud({
-                        method: "deleteMany",
-                        where: "todo",
-                        what: [todo.id!],
-                      });
-                    }}
-                  >
-                    <Cross2Icon />
-                  </Button>
+                  <DeleteButton
+                    idsToDelete={[todo.id!]}
+                    name="To Do"
+                    where="todo"
+                  />
                 </CardContent>
               </Card>
             );

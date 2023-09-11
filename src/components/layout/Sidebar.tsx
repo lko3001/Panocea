@@ -7,13 +7,10 @@ import {
 } from "@/components/ui/sheet";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { H4 } from "../ui/typography";
-import routesJson from "@/json/routes.json";
+import { routes } from "@/variables";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
-
-const routeCategories: string[] = Array.from(
-  new Set(routesJson.routes.map((route) => route.category))
-).filter((el) => Boolean(el));
+import { GetCategories } from "@/lib/utils";
 
 export default function Sidebar() {
   return (
@@ -25,12 +22,12 @@ export default function Sidebar() {
       </SheetTrigger>
       <SheetContent side={"left"} className="break-all">
         <div className="mt-4">
-          {routeCategories.map((category) => (
+          {GetCategories(routes).map((category) => (
             <div>
               <H4 className="uppercase text-xs text-muted-foreground mb-2">
                 {category}
               </H4>
-              {routesJson.routes
+              {routes
                 .filter((route) => route.category === category)
                 .map((route) => (
                   <Link

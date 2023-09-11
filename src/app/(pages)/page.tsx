@@ -1,5 +1,5 @@
 "use client";
-import routesJson from "@/json/routes.json";
+import { routes } from "@/variables";
 import { useGlobal } from "@/components/context/GlobalContext";
 import {
   CardHeader,
@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const { openShortcut, userData } = useGlobal();
@@ -21,7 +20,7 @@ export default function Home() {
         placeholder="Search or Press CTRL + K..."
         onClick={openShortcut}
       />
-      {routesJson.routes.map((route) => (
+      {routes.map((route) => (
         <Link href={route.slug} key={route.slug}>
           <Card
             key={route.slug}

@@ -1,6 +1,6 @@
 "use client";
 
-import routesJson from "@/json/routes.json";
+import { routes } from "@/variables";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import {
   CommandDialog,
@@ -13,16 +13,13 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useGlobal } from "../context/GlobalContext";
+import { GetCategories } from "@/lib/utils";
 
 export default function Shortcut() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { isShortcutOpen, setIsShortcutOpen, openShortcut } = useGlobal();
-
-  const routeCategories: string[] = Array.from(
-    new Set(routesJson.routes.map((route) => route.category))
-  ).filter((el) => Boolean(el));
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -44,13 +41,13 @@ export default function Shortcut() {
         />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-          {routeCategories.map((category) => (
+          {GetCategories(routes).map((category) => (
             <CommandGroup
               key={category}
               className="capitalize"
               heading={category}
             >
-              {routesJson.routes
+              {routes
                 .filter((route) => route.category === category)
                 .map((route) => (
                   <CommandItem
@@ -60,7 +57,7 @@ export default function Shortcut() {
                       openShortcut();
                     }}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    <route.icon className="mr-2 h-4 w-4" />
                     <span>{route.name}</span>
                   </CommandItem>
                 ))}

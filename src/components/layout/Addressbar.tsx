@@ -1,8 +1,8 @@
 "use client";
 
-import routesJson from "@/json/routes.json";
+import { routes } from "@/variables";
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { GetCategories, cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,18 +11,12 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
-import { useGlobal } from "../context/GlobalContext";
-import { Data } from "@/types";
 
 export default function Addressbar() {
-  const routeCategories: string[] = Array.from(
-    new Set(routesJson.routes.map((route) => route.category))
-  ).filter((el) => Boolean(el));
-
   return (
     <NavigationMenu className="lg:block hidden">
       <NavigationMenuList>
-        {routeCategories.map((category) => (
+        {GetCategories(routes).map((category) => (
           <NavigationMenuItem key={category}>
             <NavigationMenuTrigger
               id={category}
@@ -35,14 +29,13 @@ export default function Addressbar() {
             <NavigationMenuContent id={category} aria-controls={category}>
               <ul
                 className={`grid w-[400px] gap-3 p-4 md:w-[500px] ${
-                  routesJson.routes.filter(
-                    (route) => route.category === category
-                  ).length !== 1
+                  routes.filter((route) => route.category === category)
+                    .length !== 1
                     ? "md:grid-cols-2"
                     : ""
                 } lg:w-[600px]`}
               >
-                {routesJson.routes
+                {routes
                   .filter((route) => route.category === category)
                   .map((route) => (
                     <ListItem
