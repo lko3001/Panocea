@@ -86,6 +86,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() =>
                 editor.chain().focus().toggleHeading({ level: 1 }).run()
               }
@@ -106,6 +107,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() => editor.chain().focus().toggleBold().run()}
               disabled={!editor.can().chain().focus().toggleBold().run()}
               size={"icon"}
@@ -120,6 +122,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() => editor.chain().focus().toggleItalic().run()}
               disabled={!editor.can().chain().focus().toggleItalic().run()}
               size={"icon"}
@@ -134,6 +137,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() => editor.chain().focus().toggleStrike().run()}
               disabled={!editor.can().chain().focus().toggleStrike().run()}
               size={"icon"}
@@ -148,6 +152,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() => editor.chain().focus().toggleCode().run()}
               disabled={!editor.can().chain().focus().toggleCode().run()}
               size={"icon"}
@@ -162,6 +167,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() => editor.chain().focus().toggleCodeBlock().run()}
               disabled={!editor.can().chain().focus().toggleCodeBlock().run()}
               size={"icon"}
@@ -176,6 +182,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() => editor.chain().focus().toggleBlockquote().run()}
               disabled={!editor.can().chain().focus().toggleBlockquote().run()}
               variant={editor.isActive("blockquote") ? "default" : "outline"}
@@ -190,6 +197,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() => editor.chain().focus().undo().run()}
               disabled={!editor.can().chain().focus().undo().run()}
               size={"icon"}
@@ -204,6 +212,7 @@ export default function Toolbar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              tabIndex={1}
               onClick={() => editor.chain().focus().redo().run()}
               disabled={!editor.can().chain().focus().redo().run()}
               size={"icon"}
@@ -218,7 +227,12 @@ export default function Toolbar({
         {userData.user && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={validate} size={"icon"} variant={"default"}>
+              <Button
+                tabIndex={1}
+                onClick={validate}
+                size={"icon"}
+                variant={"default"}
+              >
                 <CheckIcon className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
