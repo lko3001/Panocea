@@ -89,8 +89,13 @@ export default function Toolbar({
               onClick={() =>
                 editor.chain().focus().toggleHeading({ level: 1 }).run()
               }
+              disabled={
+                !editor.can().chain().focus().toggleHeading({ level: 1 }).run()
+              }
               size={"icon"}
-              variant={"outline"}
+              variant={
+                editor.isActive("heading", { level: 1 }) ? "default" : "outline"
+              }
             >
               <HeadingIcon className="h-4 w-4" />
             </Button>
@@ -102,8 +107,9 @@ export default function Toolbar({
           <TooltipTrigger asChild>
             <Button
               onClick={() => editor.chain().focus().toggleBold().run()}
+              disabled={!editor.can().chain().focus().toggleBold().run()}
               size={"icon"}
-              variant={"outline"}
+              variant={editor.isActive("bold") ? "default" : "outline"}
             >
               <FontBoldIcon className="h-4 w-4" />
             </Button>
@@ -115,8 +121,9 @@ export default function Toolbar({
           <TooltipTrigger asChild>
             <Button
               onClick={() => editor.chain().focus().toggleItalic().run()}
+              disabled={!editor.can().chain().focus().toggleItalic().run()}
               size={"icon"}
-              variant={"outline"}
+              variant={editor.isActive("italic") ? "default" : "outline"}
             >
               <FontItalicIcon className="h-4 w-4" />
             </Button>
@@ -128,8 +135,9 @@ export default function Toolbar({
           <TooltipTrigger asChild>
             <Button
               onClick={() => editor.chain().focus().toggleStrike().run()}
+              disabled={!editor.can().chain().focus().toggleStrike().run()}
               size={"icon"}
-              variant={"outline"}
+              variant={editor.isActive("strike") ? "default" : "outline"}
             >
               <StrikethroughIcon className="h-4 w-4" />
             </Button>
@@ -141,8 +149,9 @@ export default function Toolbar({
           <TooltipTrigger asChild>
             <Button
               onClick={() => editor.chain().focus().toggleCode().run()}
+              disabled={!editor.can().chain().focus().toggleCode().run()}
               size={"icon"}
-              variant={"outline"}
+              variant={editor.isActive("code") ? "default" : "outline"}
             >
               <CodeIcon className="h-4 w-4" />
             </Button>
@@ -154,8 +163,9 @@ export default function Toolbar({
           <TooltipTrigger asChild>
             <Button
               onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              disabled={!editor.can().chain().focus().toggleCodeBlock().run()}
               size={"icon"}
-              variant={"outline"}
+              variant={editor.isActive("codeBlock") ? "default" : "outline"}
             >
               <CodeSandboxLogoIcon className="h-4 w-4" />
             </Button>
@@ -167,8 +177,9 @@ export default function Toolbar({
           <TooltipTrigger asChild>
             <Button
               onClick={() => editor.chain().focus().toggleBlockquote().run()}
+              disabled={!editor.can().chain().focus().toggleBlockquote().run()}
+              variant={editor.isActive("blockquote") ? "default" : "outline"}
               size={"icon"}
-              variant={"outline"}
             >
               <CursorTextIcon className="h-4 w-4" />
             </Button>
@@ -180,6 +191,7 @@ export default function Toolbar({
           <TooltipTrigger asChild>
             <Button
               onClick={() => editor.chain().focus().undo().run()}
+              disabled={!editor.can().chain().focus().undo().run()}
               size={"icon"}
               variant={"outline"}
             >
@@ -193,6 +205,7 @@ export default function Toolbar({
           <TooltipTrigger asChild>
             <Button
               onClick={() => editor.chain().focus().redo().run()}
+              disabled={!editor.can().chain().focus().redo().run()}
               size={"icon"}
               variant={"outline"}
             >
