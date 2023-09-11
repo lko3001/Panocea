@@ -23,6 +23,21 @@ export default function TextEditor() {
   const searchParams = useSearchParams();
   const titleParam = searchParams.get("title");
   const titleRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const onBeforeUnload = (e: Event) => {
+      if (true) {
+        e.preventDefault();
+        e.returnValue = "" as any;
+        return;
+      }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, []);
+
   const editor = useEditor({
     extensions: [
       CodeBlockLowlight.extend({

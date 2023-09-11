@@ -52,6 +52,10 @@ export default function Toolbar({
   }, [handleKeyPress]);
   // Code to use CTRL S ^^^^
 
+  useEffect(() => {
+    setNoteId(id);
+  }, [id]);
+
   async function validate() {
     const blankEditor = `{"type":"doc","content":[{"type":"paragraph"}]}`;
     const editorValue = JSON.stringify(editor.getJSON());
