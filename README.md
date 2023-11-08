@@ -1,17 +1,12 @@
-Red
-Orange
-Amber
-Yellow  
-Lime
-Green
-Emerald
-Teal
-Cyan
-Sky
-Blue
-Indigo
-Violet
-Purple
-Fuchsia
-Pink
-Rose
+# Panocea
+
+The word Panocea is inspired by the latin "pan", which means "all" or "every". Basically, here you can do almost whatever you want, some of the features include:
+
+- To do lists
+- Word Generator
+- Text Editor
+- Pomodoro
+- Finance
+- Rss Feeds
+
+###### That'is
